@@ -14,6 +14,11 @@ int main()
     // Perform CUDA vector addition
     vectorAdd(A.data(), B.data(), C.data(), N);
 
+    for (int i = 0; i < 10; ++i)
+    {
+        std::cout << "C[" << i << "] = " << C[i] << std::endl;
+    }
+
     // Set up SFML window
     sf::RenderWindow window(sf::VideoMode(800, 600), "CUDA + SFML");
 
