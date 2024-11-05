@@ -35,18 +35,18 @@ int main()
     }
 
     std::cout << "Displaying Results..." << std::endl;
-    for (int i = 0; i < 10; ++i)
-    {
-        std::cout << "C[" << i << "] = " << C[i] << std::endl;
-    }
-    for (int i = 0; i < 10; ++i)
-    {
-        std::cout << "A[" << i << "] = " << A[i] << std::endl;
-    }
-    for (int i = 0; i < 10; ++i)
-    {
-        std::cout << "B[" << i << "] = " << B[i] << std::endl;
-    }
+    // for (int i = 0; i < 10; ++i)
+    // {
+    //     std::cout << "C[" << i << "] = " << C[i] << std::endl;
+    // }
+    // for (int i = 0; i < 10; ++i)
+    // {
+    //     std::cout << "A[" << i << "] = " << A[i] << std::endl;
+    // }
+    // for (int i = 0; i < 10; ++i)
+    // {
+    //     std::cout << "B[" << i << "] = " << B[i] << std::endl;
+    // }
     while (window.isOpen())
     {
         sf::Event event;
