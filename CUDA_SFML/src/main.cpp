@@ -15,18 +15,19 @@ using namespace sf;
 
 int threadsPerBlock = 32; // -n (default to 32)
 int cellSize = 5;         // -c (default to 5)
-int width = 800;          // -x (default to 800)
-int height = 600;         // -y (default to 600)
+int windowWidth = 800;    // -x (default to 800)
+int windowHeight = 600;   // -y (default to 600)
 string memoryType = "NORMAL";
 
 int main(int argc, char* argv[])
 {
     // Parse command-line arguments
-    parseArguments(argc, argv, threadsPerBlock, cellSize, width, height,
-                   memoryType);
+    parseArguments(argc, argv, threadsPerBlock, cellSize, windowWidth,
+                   windowHeight, memoryType);
 
     // Display the configuration
-    displayConfiguration(threadsPerBlock, cellSize, width, height, memoryType);
+    displayConfiguration(threadsPerBlock, cellSize, windowWidth, windowHeight,
+                         memoryType);
     // Set up SFML window
     sf::RenderWindow window(sf::VideoMode(800, 600), "CUDA + SFML");
 

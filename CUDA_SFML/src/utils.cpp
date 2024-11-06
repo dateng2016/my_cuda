@@ -77,7 +77,8 @@ int countNeighbors(const vector<vector<bool>>& grid, int x, int y,
 }
 
 void parseArguments(int argc, char* argv[], int& threadsPerBlock, int& cellSize,
-                    int& width, int& height, std::string& memoryType)
+                    int& windowWidth, int& windowHeight,
+                    std::string& memoryType)
 {
     // Parse command-line arguments
     for (int i = 1; i < argc; i++)
@@ -103,14 +104,14 @@ void parseArguments(int argc, char* argv[], int& threadsPerBlock, int& cellSize,
         {
             if (i + 1 < argc)
             {
-                width = std::stoi(argv[++i]);
+                windowWidth = std::stoi(argv[++i]);
             }
         }
         else if (std::strcmp(argv[i], "-y") == 0)
         {
             if (i + 1 < argc)
             {
-                height = std::stoi(argv[++i]);
+                windowHeight = std::stoi(argv[++i]);
             }
         }
         else if (std::strcmp(argv[i], "-t") == 0)
@@ -132,20 +133,20 @@ void parseArguments(int argc, char* argv[], int& threadsPerBlock, int& cellSize,
     }
 }
 
-void displayConfiguration(int threadsPerBlock, int cellSize, int width,
-                          int height, const std::string& memoryType)
+void displayConfiguration(int threadsPerBlock, int cellSize, int windowWidth,
+                          int windowHeight, const std::string& memoryType)
 {
     std::cout << "Configuration:\n";
     std::cout << "  Number of threads per block: " << threadsPerBlock
               << std::endl;
     std::cout << "  Cell size: " << cellSize << std::endl;
-    std::cout << "  Window width: " << width << std::endl;
-    std::cout << "  Window height: " << height << std::endl;
+    std::cout << "  Window width: " << windowWidth << std::endl;
+    std::cout << "  Window height: " << windowHeight << std::endl;
     std::cout << "  Memory type: " << memoryType << std::endl;
 
     // Calculate grid size
-    int gridWidth = width / cellSize;
-    int gridHeight = height / cellSize;
+    int gridWidth = windowWidth / cellSize;
+    int gridHeight = windowHeight / cellSize;
     std::cout << "  Grid size: " << gridWidth << " x " << gridHeight
               << std::endl;
 }
