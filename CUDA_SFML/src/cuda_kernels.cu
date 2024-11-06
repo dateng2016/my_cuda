@@ -3,14 +3,16 @@
 #include <cuda_runtime.h>
 #include <iostream>
 
-__global__ void vectorAddKernel(const float* A, const float* B, float* C, int N) {
+__global__ void vectorAddKernel(const float* A, const float* B, float* C, int N)
+{
     int i = blockIdx.x * blockDim.x + threadIdx.x;
-    if (i < N) {
+    if (i < N)
+    {
         C[i] = A[i] + B[i];
     }
 }
 
-void vectorAdd(const float* A, const float* B, float* C, int N) 
+void vectorAdd(const float* A, const float* B, float* C, int N)
 {
     float *d_A, *d_B, *d_C;
     size_t size = N * sizeof(float);
@@ -28,11 +30,22 @@ void vectorAdd(const float* A, const float* B, float* C, int N)
     int threadsPerBlock = 32;
     int blocksPerGrid = (N + threadsPerBlock - 1) / threadsPerBlock;
     std::cout << "blocksPerGrid = " << blocksPerGrid << std::endl;
+
+    for (int i = 0; i < 10; ++i)
+    {
+        std::cout << "C[" << i << "] = " << C[i] << std::endl;
+    }
+
     vectorAddKernel<<<blocksPerGrid, threadsPerBlock>>>(d_A, d_B, d_C, N);
 
     cudaDeviceSynchronize();
     // Copy result back to host
     cudaMemcpy(C, d_C, size, cudaMemcpyDeviceToHost);
+
+    for (int i = 0; i < 10; ++i)
+    {
+        std::cout << "C[" << i << "] = " << C[i] << std::endl;
+    }
 
     // Free memory on GPU
     cudaFree(d_A);

@@ -10,18 +10,18 @@ int main()
     std::vector<float> A(N, 11.0f);
     std::vector<float> B(N, 2.0f);
     std::vector<float> C(N);
-    for (int i = 0; i < 10; ++i)
-    {
-        std::cout << "C[" << i << "] = " << C[i] << std::endl;
-    }
+    // for (int i = 0; i < 10; ++i)
+    // {
+    //     std::cout << "C[" << i << "] = " << C[i] << std::endl;
+    // }
 
     // Perform CUDA vector addition
     vectorAdd(A.data(), B.data(), C.data(), N);
 
-    for (int i = 0; i < 10; ++i)
-    {
-        std::cout << "C[" << i << "] = " << C[i] << std::endl;
-    }
+    // for (int i = 0; i < 10; ++i)
+    // {
+    //     std::cout << "C[" << i << "] = " << C[i] << std::endl;
+    // }
 
     // Set up SFML window
     sf::RenderWindow window(sf::VideoMode(800, 600), "CUDA + SFML");
