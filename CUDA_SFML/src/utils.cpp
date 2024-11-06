@@ -73,3 +73,29 @@ int countNeighbors(const vector<vector<bool>>& grid, int x, int y,
     }
     return count;
 }
+enum MemoryType
+{
+    NORMAL,
+    PINNED,
+    MANAGED
+};
+MemoryType parseMemoryType(const std::string& type)
+{
+    if (type == "NORMAL")
+    {
+        return NORMAL;
+    }
+    else if (type == "PINNED")
+    {
+        return PINNED;
+    }
+    else if (type == "MANAGED")
+    {
+        return MANAGED;
+    }
+    else
+    {
+        std::cerr << "Invalid memory type: " << type << "\n";
+        exit(EXIT_FAILURE);
+    }
+}
