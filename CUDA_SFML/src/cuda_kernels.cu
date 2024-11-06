@@ -1,5 +1,6 @@
 // cuda_kernels.cu
 #include "cuda_kernels.cuh"
+#include "utils.h"
 #include <cuda_runtime.h>
 #include <iostream>
 
