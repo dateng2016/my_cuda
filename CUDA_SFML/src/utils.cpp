@@ -1,6 +1,8 @@
 #include <iostream>
 #include <vector>
 using namespace std;
+#include <cassert>
+#include <cstring>
 
 void seedRandomGrid(vector<vector<bool>>& grid, int gridWidth, int gridHeight)
 {
@@ -73,29 +75,59 @@ int countNeighbors(const vector<vector<bool>>& grid, int x, int y,
     }
     return count;
 }
-enum MemoryType
+
+void parseArguments(int argc, char* argv[], int& numThreads, int& cellSize,
+                    int& width, int& height, std::string& memType)
 {
-    NORMAL,
-    PINNED,
-    MANAGED
-};
-MemoryType parseMemoryType(const std::string& type)
-{
-    if (type == "NORMAL")
+    // Parse command-line arguments
+    for (int i = 1; i < argc; i++)
     {
-        return NORMAL;
-    }
-    else if (type == "PINNED")
-    {
-        return PINNED;
-    }
-    else if (type == "MANAGED")
-    {
-        return MANAGED;
-    }
-    else
-    {
-        std::cerr << "Invalid memory type: " << type << "\n";
-        exit(EXIT_FAILURE);
+        if (std::strcmp(argv[i], "-n") == 0)
+        {
+            if (i + 1 < argc)
+            {
+                numThreads = std::stoi(argv[++i]);
+                assert(numThreads % 32 == 0 &&
+                       "Number of threads must be a multiple of 32.");
+            }
+        }
+        else if (std::strcmp(argv[i], "-c") == 0)
+        {
+            if (i + 1 < argc)
+            {
+                cellSize = std::stoi(argv[++i]);
+                assert(cellSize >= 1 && "Cell size must be >= 1.");
+            }
+        }
+        else if (std::strcmp(argv[i], "-x") == 0)
+        {
+            if (i + 1 < argc)
+            {
+                width = std::stoi(argv[++i]);
+            }
+        }
+        else if (std::strcmp(argv[i], "-y") == 0)
+        {
+            if (i + 1 < argc)
+            {
+                height = std::stoi(argv[++i]);
+            }
+        }
+        else if (std::strcmp(argv[i], "-t") == 0)
+        {
+            if (i + 1 < argc)
+            {
+                memType = argv[++i];
+                // Ensure memory type is valid
+                if (memType != "NORMAL" && memType != "PINNED" &&
+                    memType != "MANAGED")
+                {
+                    std::cerr << "Invalid memory type. Valid options are: "
+                                 "NORMAL, PINNED, or MANAGED."
+                              << std::endl;
+                    std::exit(EXIT_FAILURE);
+                }
+            }
+        }
     }
 }
