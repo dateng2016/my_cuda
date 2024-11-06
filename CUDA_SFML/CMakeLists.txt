@@ -19,7 +19,7 @@ link_directories(${PROJECT_SOURCE_DIR}/../SFML/lib)
 #set(CUDA_ARCHITECTURES 52)
 
 # Specify the target executable
-add_executable(cuda_sfml_app src/main.cpp src/cuda_kernels.cu)
+add_executable(cuda_sfml_app src/main.cpp src/cuda_kernels.cu src/utils.cpp)
 
 # Link SFML libraries
 target_link_libraries(cuda_sfml_app sfml-graphics sfml-window sfml-system)

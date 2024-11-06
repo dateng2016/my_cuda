@@ -1,8 +1,17 @@
 // main.cpp
 #include "cuda_kernels.cuh"
+#include "utils.h"
 #include <SFML/Graphics.hpp>
+#include <chrono>
+#include <cstdlib>
+#include <ctime>
 #include <iostream>
+#include <omp.h>
+#include <string>
 #include <vector>
+
+using namespace std;
+using namespace sf;
 
 int main()
 {
