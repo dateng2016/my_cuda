@@ -39,19 +39,18 @@ void displayConfiguration(int threadsPerBlock, int cellSize, int width,
 
 int main(int argc, char* argv[])
 {
+    // Parse command-line arguments
+    parseArguments(argc, argv, threadsPerBlock, cellSize, width, height,
+                   memoryType);
 
+    // Display the configuration
+    displayConfiguration(threadsPerBlock, cellSize, width, height, memoryType);
     // Set up SFML window
     sf::RenderWindow window(sf::VideoMode(800, 600), "CUDA + SFML");
 
     while (window.isOpen())
     {
-        // Parse command-line arguments
-        parseArguments(argc, argv, threadsPerBlock, cellSize, width, height,
-                       memoryType);
 
-        // Display the configuration
-        displayConfiguration(threadsPerBlock, cellSize, width, height,
-                             memoryType);
         sf::Event event;
         while (window.pollEvent(event))
         {
