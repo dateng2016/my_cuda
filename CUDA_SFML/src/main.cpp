@@ -28,8 +28,7 @@ int main()
     while (window.isOpen())
     {
         sf::Event event;
-        if (event.type == Event::Closed ||
-            Keyboard::isKeyPressed(Keyboard::Escape))
+        if (event.type == Event::Closed)
         {
             window.close();
         }
