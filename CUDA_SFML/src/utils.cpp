@@ -131,3 +131,21 @@ void parseArguments(int argc, char* argv[], int& threadsPerBlock, int& cellSize,
         }
     }
 }
+
+void displayConfiguration(int threadsPerBlock, int cellSize, int width,
+                          int height, const std::string& memoryType)
+{
+    std::cout << "Configuration:\n";
+    std::cout << "  Number of threads per block: " << threadsPerBlock
+              << std::endl;
+    std::cout << "  Cell size: " << cellSize << std::endl;
+    std::cout << "  Window width: " << width << std::endl;
+    std::cout << "  Window height: " << height << std::endl;
+    std::cout << "  Memory type: " << memoryType << std::endl;
+
+    // Calculate grid size
+    int gridWidth = width / cellSize;
+    int gridHeight = height / cellSize;
+    std::cout << "  Grid size: " << gridWidth << " x " << gridHeight
+              << std::endl;
+}
