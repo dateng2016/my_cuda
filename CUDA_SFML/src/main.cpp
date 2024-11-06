@@ -15,7 +15,6 @@ using namespace sf;
 
 int main()
 {
-    my_print();
     const int N = 1024;
     std::vector<float> A(N, 11.0f);
     std::vector<float> B(N, 2.0f);
