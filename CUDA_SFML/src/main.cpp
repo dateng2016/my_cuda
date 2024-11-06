@@ -28,10 +28,10 @@ int main()
     while (window.isOpen())
     {
         sf::Event event;
-        while (window.pollEvent(event))
+        if (event.type == Event::Closed ||
+            Keyboard::isKeyPressed(Keyboard::Escape))
         {
-            if (event.type == sf::Event::Closed)
-                window.close();
+            window.close();
         }
 
         window.clear();
