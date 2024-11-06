@@ -15,11 +15,29 @@ using namespace sf;
 
 int threadsPerBlock = 32; // -n (default to 32)
 int cellSize = 5;         // -c (default to 5)
-int windowWidth = 800;    // -x (default to 800)
-int windowHeight = 600;   // -y (default to 600)
+int width = 800;          // -x (default to 800)
+int height = 600;         // -y (default to 600)
 string memoryType = "NORMAL";
 
-int main()
+void displayConfiguration(int threadsPerBlock, int cellSize, int width,
+                          int height, const std::string& memoryType)
+{
+    std::cout << "Configuration:\n";
+    std::cout << "  Number of threads per block: " << threadsPerBlock
+              << std::endl;
+    std::cout << "  Cell size: " << cellSize << std::endl;
+    std::cout << "  Window width: " << width << std::endl;
+    std::cout << "  Window height: " << height << std::endl;
+    std::cout << "  Memory type: " << memoryType << std::endl;
+
+    // Calculate grid size
+    int gridWidth = width / cellSize;
+    int gridHeight = height / cellSize;
+    std::cout << "  Grid size: " << gridWidth << " x " << gridHeight
+              << std::endl;
+}
+
+int main(int argc, char* argv[])
 {
 
     // Set up SFML window
@@ -27,6 +45,13 @@ int main()
 
     while (window.isOpen())
     {
+        // Parse command-line arguments
+        parseArguments(argc, argv, threadsPerBlock, cellSize, width, height,
+                       memoryType);
+
+        // Display the configuration
+        displayConfiguration(threadsPerBlock, cellSize, width, height,
+                             memoryType);
         sf::Event event;
         while (window.pollEvent(event))
         {

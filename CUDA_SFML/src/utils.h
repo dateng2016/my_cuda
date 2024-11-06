@@ -1,6 +1,7 @@
 #include <iostream>
-using namespace std;
 #include <vector>
+
+using namespace std;
 
 void seedRandomGrid(vector<vector<bool>>& grid, int gridWidth, int gridHeight);
 int countNeighbors(const vector<vector<bool>>& grid, int x, int y,

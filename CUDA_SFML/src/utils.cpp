@@ -76,8 +76,8 @@ int countNeighbors(const vector<vector<bool>>& grid, int x, int y,
     return count;
 }
 
-void parseArguments(int argc, char* argv[], int& numThreads, int& cellSize,
-                    int& width, int& height, std::string& memType)
+void parseArguments(int argc, char* argv[], int& threadsPerBlock, int& cellSize,
+                    int& width, int& height, std::string& memoryType)
 {
     // Parse command-line arguments
     for (int i = 1; i < argc; i++)
@@ -86,8 +86,8 @@ void parseArguments(int argc, char* argv[], int& numThreads, int& cellSize,
         {
             if (i + 1 < argc)
             {
-                numThreads = std::stoi(argv[++i]);
-                assert(numThreads % 32 == 0 &&
+                threadsPerBlock = std::stoi(argv[++i]);
+                assert(threadsPerBlock % 32 == 0 &&
                        "Number of threads must be a multiple of 32.");
             }
         }
@@ -117,10 +117,10 @@ void parseArguments(int argc, char* argv[], int& numThreads, int& cellSize,
         {
             if (i + 1 < argc)
             {
-                memType = argv[++i];
+                memoryType = argv[++i];
                 // Ensure memory type is valid
-                if (memType != "NORMAL" && memType != "PINNED" &&
-                    memType != "MANAGED")
+                if (memoryType != "NORMAL" && memoryType != "PINNED" &&
+                    memoryType != "MANAGED")
                 {
                     std::cerr << "Invalid memory type. Valid options are: "
                                  "NORMAL, PINNED, or MANAGED."
