@@ -28,8 +28,20 @@ int main(int argc, char* argv[])
     // Display the configuration
     displayConfiguration(threadsPerBlock, cellSize, windowWidth, windowHeight,
                          memoryType);
-    // Set up SFML window
-    sf::RenderWindow window(sf::VideoMode(800, 600), "CUDA + SFML");
+
+    // * Calculate Grid Width and Height
+    int gridWidth = windowWidth / cellSize;
+    int gridHeight = windowHeight / cellSize;
+    // * Set up SFML window
+    sf::RenderWindow window(sf::VideoMode(windowWidth, windowHeight),
+                            "CUDA + SFML");
+    window.setFramerateLimit(120); // Set frame rate to control speed
+    vector<vector<bool>> gridCurrent(gridWidth,
+                                     vector<bool>(gridHeight, false));
+    vector<vector<bool>> gridNext(gridWidth, vector<bool>(gridHeight, false));
+
+    seedRandomGrid(gridCurrent, gridWidth, gridHeight);
+    gridNext = gridCurrent;
 
     while (window.isOpen())
     {
