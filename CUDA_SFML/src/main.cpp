@@ -43,19 +43,18 @@ int main(int argc, char* argv[])
     seedRandomGrid(gridCurrent, gridWidth, gridHeight);
     gridNext = gridCurrent;
 
-    // ! Experiment
-    float vec1[8] = {1, 1, 1, 1, 1, 1, 1, 1};
-    float vec2[8] = {1, 1, 1, 1, 1, 1, 1, 1};
+    // // ! Experiment
+    // float vec1[8] = {1, 1, 1, 1, 1, 1, 1, 1};
+    // float vec2[8] = {1, 1, 1, 1, 1, 1, 1, 1};
 
-    float vec3[8];
-    vectorAdd(vec1, vec2, vec3, 8);
+    // float vec3[8];
+    // vectorAdd(vec1, vec2, vec3, 8);
 
-    // ! End of experiment
+    // // ! End of experiment
 
     // FIXME:
-    // normalMemSimulate(window, threadsPerBlock, gridCurrent, gridNext,
-    // gridWidth,
-    //                   gridHeight, cellSize);
+    normalMemSimulate(window, threadsPerBlock, gridCurrent, gridNext, gridWidth,
+                      gridHeight, cellSize);
 
     // while (window.isOpen())
     // {
