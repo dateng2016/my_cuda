@@ -43,24 +43,27 @@ int main(int argc, char* argv[])
     seedRandomGrid(gridCurrent, gridWidth, gridHeight);
     gridNext = gridCurrent;
 
-    while (window.isOpen())
-    {
+    normalMemSimulate(window, threadsPerBlock, gridCurrent, gridNext, gridWidth,
+                      gridHeight);
+    // while (window.isOpen())
+    // {
 
-        sf::Event event;
-        while (window.pollEvent(event))
-        {
-            if (event.type == Event::Closed ||
-                Keyboard::isKeyPressed(Keyboard::Escape))
-            {
-                window.close();
-            }
-        }
+    //     sf::Event event;
+    //     while (window.pollEvent(event))
+    //     {
+    //         if (event.type == Event::Closed ||
+    //             Keyboard::isKeyPressed(Keyboard::Escape))
+    //         {
+    //             window.close();
+    //         }
 
-        window.clear();
-        // * Do the drawing here
+    //     }
 
-        window.display();
-    }
+    //     window.clear();
+    //     // * Do the drawing here
+
+    //     window.display();
+    // }
 
     return 0;
 }
