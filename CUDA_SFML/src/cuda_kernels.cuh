@@ -1,3 +1,10 @@
+#include "utils.h"
+#include <iostream>
+#include <vector>
+
+using namespace std;
+using namespace sf;
+
 // cuda_kernels.cuh
 #ifndef CUDA_KERNELS_H
 #define CUDA_KERNELS_H
