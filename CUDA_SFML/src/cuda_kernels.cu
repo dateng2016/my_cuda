@@ -173,6 +173,8 @@ void vectorAdd(const float* A, const float* B, float* C, int N)
         std::cout << "C[" << i << "] = " << C[i] << std::endl;
     }
 
+    vectorAddKernel<<<blocksPerGrid, threadsPerBlock>>>(d_A, d_B, d_C, N);
+
     // Check for kernel launch errors
     cudaError_t err = cudaGetLastError();
     cout << "Error DETECTION before" << endl;
@@ -183,8 +185,6 @@ void vectorAdd(const float* A, const float* B, float* C, int N)
         exit(EXIT_FAILURE);
     }
     cout << "Error DETECTION AFTER" << endl;
-
-    vectorAddKernel<<<blocksPerGrid, threadsPerBlock>>>(d_A, d_B, d_C, N);
 
     cudaDeviceSynchronize();
     // Copy result back to host
