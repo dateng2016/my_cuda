@@ -87,12 +87,13 @@ void normalMemSimulate(RenderWindow& window, int threadsPerBlock,
         }
 
         // Launch CUDA kernel to update the grid
-        updateGridKernel<<<gridDim, blockDim>>>(d_gridCurrent, d_gridNext,
-                                                gridWidth, gridHeight);
+        // updateGridKernel<<<gridDim, blockDim>>>(d_gridCurrent, d_gridNext,
+        //                                         gridWidth, gridHeight);
 
         // Check for kernel launch errors
         cudaError_t err = cudaGetLastError();
         cout << "Error DETECTION before" << endl;
+        cin;
         if (err != cudaSuccess)
         {
             std::cerr << "CUDA kernel launch failed: "
