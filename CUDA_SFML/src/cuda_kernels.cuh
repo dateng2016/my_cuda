@@ -12,5 +12,6 @@ void normalMemSimulate(RenderWindow& window, int threadsPerBlock,
                        vector<vector<bool>>& gridCurrent,
                        vector<vector<bool>>& gridNext, int gridWidth,
                        int gridHeight, int cellSize);
+void vectorAdd(const float* A, const float* B, float* C, int N);
 
 #endif // CUDA_KERNELS_H
