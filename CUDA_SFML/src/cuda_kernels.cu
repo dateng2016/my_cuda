@@ -182,7 +182,7 @@ void vectorAdd(const float* A, const float* B, float* C, int N)
     {
         std::cerr << "CUDA kernel launch failed: " << cudaGetErrorString(err)
                   << std::endl;
-        exit(EXIT_FAILURE);
+        // exit(EXIT_FAILURE);
     }
     cout << "Error DETECTION AFTER" << endl;
 
