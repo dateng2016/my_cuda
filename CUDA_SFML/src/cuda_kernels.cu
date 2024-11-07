@@ -3,6 +3,10 @@
 #include "utils.h"
 #include <cuda_runtime.h>
 #include <iostream>
+#include <vector>
+
+using namespace std;
+using namespace sf;
 
 // CUDA kernel for updating the grid
 __global__ void updateGridKernel(bool* gridCurrent, bool* gridNext,
