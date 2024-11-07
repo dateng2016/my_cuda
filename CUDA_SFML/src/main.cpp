@@ -43,6 +43,7 @@ int main(int argc, char* argv[])
     seedRandomGrid(gridCurrent, gridWidth, gridHeight);
     gridNext = gridCurrent;
 
+    cout << "Entering the kernel" << endl;
     normalMemSimulate(window, threadsPerBlock, gridCurrent, gridNext, gridWidth,
                       gridHeight, cellSize);
     // while (window.isOpen())
