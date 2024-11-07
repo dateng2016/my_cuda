@@ -44,7 +44,7 @@ int main(int argc, char* argv[])
     gridNext = gridCurrent;
 
     normalMemSimulate(window, threadsPerBlock, gridCurrent, gridNext, gridWidth,
-                      gridHeight);
+                      gridHeight, cellSize);
     // while (window.isOpen())
     // {
 

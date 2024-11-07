@@ -11,6 +11,6 @@ using namespace sf;
 void normalMemSimulate(RenderWindow& window, int threadsPerBlock,
                        vector<vector<bool>>& gridCurrent,
                        vector<vector<bool>>& gridNext, int gridWidth,
-                       int gridHeight);
+                       int gridHeight, int cellSize);
 
 #endif // CUDA_KERNELS_H

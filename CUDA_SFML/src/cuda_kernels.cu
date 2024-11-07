@@ -51,10 +51,9 @@ __global__ void updateGridKernel(bool* gridCurrent, bool* gridNext,
 void normalMemSimulate(RenderWindow& window, int threadsPerBlock,
                        vector<vector<bool>>& gridCurrent,
                        vector<vector<bool>>& gridNext, int gridWidth,
-                       int gridHeight)
+                       int gridHeight, int cellSize)
 //    TODO: Might NOT neet gridWidth and gridHeight
 {
-    bool *d_gridCurrent, *d_gridNext;
     // Initialize grid states on host
     bool *d_gridCurrent, *d_gridNext;
 
