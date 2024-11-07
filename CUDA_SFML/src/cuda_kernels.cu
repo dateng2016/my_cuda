@@ -168,12 +168,7 @@ void vectorAdd(const float* A, const float* B, float* C, int N)
     int blocksPerGrid = (N + threadsPerBlock - 1) / threadsPerBlock;
     std::cout << "blocksPerGrid = " << blocksPerGrid << std::endl;
 
-    for (int i = 0; i < 10; ++i)
-    {
-        std::cout << "C[" << i << "] = " << C[i] << std::endl;
-    }
-
-    vectorAddKernel<<<blocksPerGrid, threadsPerBlock>>>(d_A, d_B, d_C, N);
+     vectorAddKernel<<<blocksPerGrid, threadsPerBlock>>>(d_A, d_B, d_C, N);
 
     // Check for kernel launch errors
     cudaError_t err = cudaGetLastError();

@@ -44,8 +44,9 @@ int main(int argc, char* argv[])
     gridNext = gridCurrent;
 
     // ! Experiment
-    float vec1[8];
-    float vec2[8];
+    float vec1[8] = {1, 1, 1, 1, 1, 1, 1, 1};
+    float vec2[8] = {1, 1, 1, 1, 1, 1, 1, 1};
+
     float vec3[8];
     vectorAdd(vec1, vec2, vec3, 8);
 
