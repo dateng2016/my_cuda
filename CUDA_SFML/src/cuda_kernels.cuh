@@ -1,18 +1,16 @@
-#include "utils.h"
-#include <iostream>
+#ifndef CUDA_KERNELS_H
+#define CUDA_KERNELS_H
+
+#include <SFML/Graphics.hpp> // For RenderWindow (needed for SFML)
 #include <vector>
 
 using namespace std;
 using namespace sf;
 
-// cuda_kernels.cuh
-#ifndef CUDA_KERNELS_H
-#define CUDA_KERNELS_H
-
-// void vectorAdd(const float* A, const float* B, float* C, int N);
+// Function declaration for normalMemSimulate
 void normalMemSimulate(RenderWindow& window, int threadsPerBlock,
                        vector<vector<bool>>& gridCurrent,
                        vector<vector<bool>>& gridNext, int gridWidth,
                        int gridHeight);
 
-#endif
+#endif // CUDA_KERNELS_H
