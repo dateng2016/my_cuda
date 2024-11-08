@@ -134,7 +134,7 @@ void normalMemSimulate(RenderWindow& window, int threadsPerBlock,
                  << " threads per block using Normal memory allocation."
                  << endl;
             generationCount = 0;
-            long long totalTime = 0;
+            totalTime = 0;
         }
 
         // * We move the memory from GPU to host to render the image
