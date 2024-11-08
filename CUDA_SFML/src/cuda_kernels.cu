@@ -72,8 +72,8 @@ void normalMemSimulate(RenderWindow& window, int threadsPerBlock,
     {
         for (int x = 0; x < gridWidth; ++x)
         {
-            flatGridCurrent.push_back(static_cast<uint8_t> gridCurrent[y][x]);
-            flatGridNext.push_back(static_cast<uint8_t> gridNext[y][x]);
+            flatGridCurrent.push_back(static_cast<uint8_t>(gridCurrent[y][x]));
+            flatGridNext.push_back(static_cast<uint8_t>(gridNext[y][x]));
         }
     }
     // * Copy vectors from host to device
