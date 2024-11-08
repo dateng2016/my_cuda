@@ -55,7 +55,7 @@ void normalMemSimulate(RenderWindow& window, int threadsPerBlock,
 {
     uint8_t *d_gridCurrent, *d_gridNext;
     int N = gridWidth * gridHeight;
-    size_t size = N * sizeof(bool);
+    size_t size = N * sizeof(uint8_t);
     // * Allocate Memory on GPU
     cudaMalloc(&d_gridCurrent, size);
     cudaMalloc(&d_gridNext, size);
@@ -109,13 +109,13 @@ void normalMemSimulate(RenderWindow& window, int threadsPerBlock,
 
         window.clear();
 
+        RectangleShape cell(Vector2f(cellSize, cellSize));
         for (int y = 0; y < gridHeight; ++y)
         {
             for (int x = 0; x < gridWidth; ++x)
             {
                 if (flatGridCurrent[y * gridWidth + x])
                 {
-                    RectangleShape cell(Vector2f(cellSize, cellSize));
                     // cell.setPosition(y * cellSize, x * cellSize);
                     cell.setPosition(x * cellSize, y * cellSize);
 
@@ -128,7 +128,7 @@ void normalMemSimulate(RenderWindow& window, int threadsPerBlock,
         window.display();
 
         // * We do the memory swap INSIDE the GPU so we do not have to
-        // * Move the memory from HOST to GPU AGAIN.
+        // * move the memory from HOST to GPU AGAIN.
         uint8_t* temp = d_gridCurrent;
         d_gridCurrent = d_gridNext;
         d_gridNext = temp;
