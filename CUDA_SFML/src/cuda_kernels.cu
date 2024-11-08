@@ -79,7 +79,7 @@ void normalMemSimulate(RenderWindow& window, int threadsPerBlock,
     // * Copy vectors from host to device
     cudaMemcpy(d_gridCurrent, flatGridCurrent.data(), size,
                cudaMemcpyHostToDevice);
-    cudaMemcpy(d_gridNext, flatGridNext, size, cudaMemcpyHostToDevice);
+    cudaMemcpy(d_gridNext, flatGridNext.data(), size, cudaMemcpyHostToDevice);
 
     // * Determine the number of blocks per grid.
     int blocksPerGrid = (N + threadsPerBlock - 1) / threadsPerBlock;
