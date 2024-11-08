@@ -121,7 +121,7 @@ void normalMemSimulate(RenderWindow& window, int threadsPerBlock,
         // * END of timing count
 
         // * Handle the STDOUT here
-        if (!startCounting && generationCount > 100)
+        if (!startCounting && generationCount > 10)
         {
             // * We only start counting after the GPU "warms up"
             startCounting = true;
@@ -247,7 +247,7 @@ void pinnedMemSimulate(RenderWindow& window, int threadsPerBlock,
         // * END of timing count
 
         // * Handle the STDOUT here
-        if (!startCounting && generationCount > 100)
+        if (!startCounting && generationCount > 10)
         {
             // * We only start counting after the GPU "warms up"
             startCounting = true;
@@ -372,7 +372,7 @@ void managedMemSimulate(RenderWindow& window, int threadsPerBlock,
         // * END of timing count
 
         // * Handle the STDOUT here
-        if (!startCounting && generationCount > 100)
+        if (!startCounting && generationCount > 10)
         {
             // * We only start counting after the GPU "warms up"
             startCounting = true;
