@@ -44,6 +44,15 @@ int main(int argc, char* argv[])
     seedRandomGrid(gridCurrent, gridWidth, gridHeight);
     gridNext = gridCurrent;
 
+    for (auto& v : gridCurrent)
+    {
+        for (auto& i : v)
+        {
+            cout << i << ' ';
+        }
+        cout << endl;
+    }
+
     // FIXME:
     normalMemSimulate(window, threadsPerBlock, gridCurrent, gridNext, gridWidth,
                       gridHeight, cellSize);
