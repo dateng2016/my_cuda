@@ -121,7 +121,7 @@ void normalMemSimulate(RenderWindow& window, int threadsPerBlock,
             {
                 if (flatGridCurrent[y * gridWidth + x])
                 {
-                    cout << "1 " << endl;
+                    cout << "1 ";
                     // cell.setPosition(y * cellSize, x * cellSize);
                     cell.setPosition(x * cellSize, y * cellSize);
                     cell.setFillColor(Color::White);
@@ -129,7 +129,7 @@ void normalMemSimulate(RenderWindow& window, int threadsPerBlock,
                 }
                 else
                 {
-                    cout << "0 " << endl;
+                    cout << "0 ";
                 }
             }
             cout << endl;
