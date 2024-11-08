@@ -62,8 +62,8 @@ void normalMemSimulate(RenderWindow& window, int threadsPerBlock,
     // cudaMalloc(&d_gridNext, size);
     // cudaMallocManaged(&d_gridCurrent, size);
     // cudaMallocManaged(&d_gridNext, size);
-    // cudaMallocHost(&d_gridCurrent, size);
-    // cudaMallocHost(&d_gridNext, size);
+    cudaMallocHost(&d_gridCurrent, size);
+    cudaMallocHost(&d_gridNext, size);
 
     // * Flatten the vectors
     vector<uint8_t> flatGridCurrent;
