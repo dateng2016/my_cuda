@@ -135,11 +135,11 @@ void normalMemSimulate(RenderWindow& window, int threadsPerBlock,
         // * We do the memory swap INSIDE the GPU so we do not have to
         // * move the memory from HOST to GPU AGAIN.
 
-        // uint8_t* temp = d_gridCurrent;
-        // d_gridCurrent = d_gridNext;
-        // d_gridNext = temp;
-        cudaMemcpy(d_gridCurrent, flatGridCurrent.data(), size,
-                   cudaMemcpyHostToDevice);
+        uint8_t* temp = d_gridCurrent;
+        d_gridCurrent = d_gridNext;
+        d_gridNext = temp;
+        // cudaMemcpy(d_gridCurrent, flatGridCurrent.data(), size,
+        //            cudaMemcpyHostToDevice);
     }
 
     // * Free the GPU Memory when the while loop finishes
