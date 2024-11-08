@@ -128,9 +128,7 @@ void normalMemSimulate(RenderWindow& window, int threadsPerBlock,
                     window.draw(cell);
                 }
             }
-            cout << endl;
         }
-        cout << "-----------------" << endl;
 
         window.display();
 
