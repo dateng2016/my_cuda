@@ -9,8 +9,8 @@ using namespace sf;
 
 // Function declaration for normalMemSimulate
 void normalMemSimulate(RenderWindow& window, int threadsPerBlock,
-                       vector<vector<uint8_t>>& gridCurrent,
-                       vector<vector<uint8_t>>& gridNext, int gridWidth,
+                       vector<vector<int>>& gridCurrent,
+                       vector<vector<int>>& gridNext, int gridWidth,
                        int gridHeight, int cellSize);
 void vectorAdd(const float* A, const float* B, float* C, int N);
 
