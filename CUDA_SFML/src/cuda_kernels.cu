@@ -101,13 +101,14 @@ void normalMemSimulate(RenderWindow& window, int threadsPerBlock,
             exit(EXIT_FAILURE);
         }
 
-        cout << "-----" << endl;
-        cout << gridCurrent.size() << endl << gridCurrent[0].size() << endl;
-        cout << "-----" << endl;
         // Copy the updated grid back to host
         cudaMemcpy(gridCurrent.data(), d_gridNext,
                    gridWidth * gridHeight * sizeof(bool),
                    cudaMemcpyDeviceToHost);
+
+        cout << "-----" << endl;
+        cout << gridCurrent.size() << endl << gridCurrent[0].size() << endl;
+        cout << "-----" << endl;
 
         window.clear();
 
