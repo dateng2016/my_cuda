@@ -9,8 +9,9 @@ using namespace std;
 using namespace sf;
 
 // CUDA kernel for updating the grid
-__global__ void updateGridKernel(bool* gridCurrent, bool* gridNext,
-                                 int gridWidth, int gridHeight)
+__global__ void updateGridKernel(vector<vector<bool>>& gridCurrent,
+                                 vector<vector<bool>>& gridNext, int gridWidth,
+                                 int gridHeight)
 {
     int x = blockIdx.x * blockDim.x + threadIdx.x; // x index of cell
     int y = blockIdx.y * blockDim.y + threadIdx.y; // y index of cell
