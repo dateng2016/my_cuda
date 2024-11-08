@@ -30,7 +30,11 @@ __global__ void updateGridKernel(uint8_t* gridCurrent, uint8_t* gridNext,
             if (nx >= 0 && nx < gridWidth && ny >= 0 && ny < gridHeight &&
                 !(dx == 0 && dy == 0))
             {
-                neighbors += gridCurrent[nx + ny * gridWidth];
+                // neighbors += gridCurrent[nx + ny * gridWidth];
+                if (gridCurrent[nx + ny * gridWidth])
+                {
+                    neighbors += 1;
+                }
             }
         }
     }
