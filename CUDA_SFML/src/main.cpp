@@ -44,9 +44,21 @@ int main(int argc, char* argv[])
     seedRandomGrid(gridCurrent, gridWidth, gridHeight);
     gridNext = gridCurrent;
 
-    // FIXME:
-    normalMemSimulate(window, threadsPerBlock, gridCurrent, gridNext, gridWidth,
-                      gridHeight, cellSize, memoryType);
+    if (memoryType == "NORMAL")
+    {
+        normalMemSimulate(window, threadsPerBlock, gridCurrent, gridNext,
+                          gridWidth, gridHeight, cellSize, memoryType);
+    }
+    else if (memoryType == "PINNED")
+    {
+        pinnedMemSimulate(window, threadsPerBlock, gridCurrent, gridNext,
+                          gridWidth, gridHeight, cellSize, memoryType);
+    }
+    else if (memoryType == "MANAGED")
+    {
+        managedMemSimulate(window, threadsPerBlock, gridCurrent, gridNext,
+                           gridWidth, gridHeight, cellSize, memoryType);
+    }
 
     return 0;
 }

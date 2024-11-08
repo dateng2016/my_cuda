@@ -12,6 +12,13 @@ void normalMemSimulate(RenderWindow& window, int threadsPerBlock,
                        vector<vector<uint8_t>>& gridCurrent,
                        vector<vector<uint8_t>>& gridNext, int gridWidth,
                        int gridHeight, int cellSize, string memoryType);
-void vectorAdd(const float* A, const float* B, float* C, int N);
+void pinnedMemSimulate(RenderWindow& window, int threadsPerBlock,
+                       vector<vector<uint8_t>>& gridCurrent,
+                       vector<vector<uint8_t>>& gridNext, int gridWidth,
+                       int gridHeight, int cellSize, string memoryType);
+void managedMemSimulate(RenderWindow& window, int threadsPerBlock,
+                        vector<vector<uint8_t>>& gridCurrent,
+                        vector<vector<uint8_t>>& gridNext, int gridWidth,
+                        int gridHeight, int cellSize, string memoryType);
 
 #endif // CUDA_KERNELS_H
