@@ -111,7 +111,7 @@ void normalMemSimulate(RenderWindow& window, int threadsPerBlock,
         {
             for (int y = 0; y < gridHeight; ++y)
             {
-                cout << x << ', ' << y << endl;
+                cout << x << ", " << y << endl;
                 if (gridCurrent[x][y])
                 {
                     RectangleShape cell(Vector2f(cellSize, cellSize));
