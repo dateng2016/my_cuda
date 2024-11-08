@@ -111,14 +111,13 @@ void normalMemSimulate(RenderWindow& window, int threadsPerBlock,
         {
             for (int y = 0; y < gridHeight; ++y)
             {
+                cout << x << ', ' << y << endl;
                 if (gridCurrent[x][y])
                 {
-                    cout << "Hello" << endl;
                     RectangleShape cell(Vector2f(cellSize, cellSize));
                     cell.setPosition(x * cellSize, y * cellSize);
                     cell.setFillColor(Color::White);
                     window.draw(cell);
-                    cout << "Hello" << endl;
                 }
             }
         }
