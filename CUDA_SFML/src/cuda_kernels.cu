@@ -8,121 +8,117 @@
 using namespace std;
 using namespace sf;
 
+// CUDA kernel for updating the grid
 __global__ void updateGridKernel(bool* gridCurrent, bool* gridNext,
                                  int gridWidth, int gridHeight)
 {
-    int x = blockIdx.x * blockDim.x + threadIdx.x; // x index of cell
-    int y = blockIdx.y * blockDim.y + threadIdx.y; // y index of cell
+    int x = blockIdx.x * blockDim.x + threadIdx.x;
+    int y = blockIdx.y * blockDim.y + threadIdx.y;
 
     if (x >= gridWidth || y >= gridHeight)
-        return; // Boundary check
+        return;
 
     int neighbors = 0;
+    int idx = x + y * gridWidth;
 
     // Count neighbors of the current cell
     for (int dx = -1; dx <= 1; dx++)
     {
         for (int dy = -1; dy <= 1; dy++)
         {
+            if (dx == 0 && dy == 0)
+                continue;
+
             int nx = x + dx;
             int ny = y + dy;
-            if (nx >= 0 && nx < gridWidth && ny >= 0 && ny < gridHeight &&
-                !(dx == 0 && dy == 0))
-            {
-                neighbors += gridCurrent[nx + ny * gridWidth];
-            }
+
+            // Wrap around edges
+            nx = (nx + gridWidth) % gridWidth;
+            ny = (ny + gridHeight) % gridHeight;
+
+            neighbors += gridCurrent[nx + ny * gridWidth];
         }
     }
 
     // Conway's Game of Life rules
-    int idx = x + y * gridWidth;
-    if (gridCurrent[idx])
-    {
-        gridNext[idx] =
-            (neighbors == 2 || neighbors == 3); // Cell remains alive
-    }
-    else
-    {
-        gridNext[idx] = (neighbors == 3); // Cell becomes alive
-    }
+    gridNext[idx] = (neighbors == 3 || (neighbors == 2 && gridCurrent[idx]));
 }
 
-void normalMemSimulate(RenderWindow& window, int threadsPerBlock,
-                       vector<vector<bool>>& gridCurrent,
-                       vector<vector<bool>>& gridNext, int gridWidth,
+void normalMemSimulate(sf::RenderWindow& window, int threadsPerBlock,
+                       vector<vector<bool>>& grid, int gridWidth,
                        int gridHeight, int cellSize)
 {
-    // Flatten the grid for easier CUDA handling
-    bool* d_gridCurrent;
-    bool* d_gridNext;
-
-    size_t gridSize = gridWidth * gridHeight * sizeof(bool);
-
-    // Allocate memory on device (GPU)
-    cudaMalloc((void**)&d_gridCurrent, gridSize);
-    cudaMalloc((void**)&d_gridNext, gridSize);
-
-    // Flatten 2D vectors to 1D array for copying to GPU
+    // Create flat arrays for CUDA
     vector<bool> flatGridCurrent(gridWidth * gridHeight);
     vector<bool> flatGridNext(gridWidth * gridHeight);
 
-    // Copy data from 2D vector to 1D array for both grids
-    for (int y = 0; y < gridHeight; ++y)
+    // Convert 2D grid to flat array
+    for (int y = 0; y < gridHeight; y++)
     {
-        for (int x = 0; x < gridWidth; ++x)
+        for (int x = 0; x < gridWidth; x++)
         {
-            flatGridCurrent[x + y * gridWidth] = gridCurrent[x][y];
-            flatGridNext[x + y * gridWidth] = gridNext[x][y];
+            flatGridCurrent[x + y * gridWidth] = grid[x][y];
         }
     }
 
-    // Copy data from host (CPU) to device (GPU)
-    cudaMemcpy(d_gridCurrent, flatGridCurrent.data(), gridSize,
-               cudaMemcpyHostToDevice);
-    cudaMemcpy(d_gridNext, flatGridNext.data(), gridSize,
-               cudaMemcpyHostToDevice);
+    // Initialize grid states on device
+    bool *d_gridCurrent, *d_gridNext;
 
-    // Define block and grid size
-    dim3 blockDim(16, 16); // 16x16 threads per block
+    // Allocate memory on device (GPU)
+    cudaMalloc((void**)&d_gridCurrent, gridWidth * gridHeight * sizeof(bool));
+    cudaMalloc((void**)&d_gridNext, gridWidth * gridHeight * sizeof(bool));
+
+    // Copy initial state to device
+    cudaMemcpy(d_gridCurrent, flatGridCurrent.data(),
+               gridWidth * gridHeight * sizeof(bool), cudaMemcpyHostToDevice);
+
+    // Define block and grid dimensions
+    dim3 blockDim(threadsPerBlock, threadsPerBlock);
     dim3 gridDim((gridWidth + blockDim.x - 1) / blockDim.x,
                  (gridHeight + blockDim.y - 1) / blockDim.y);
 
-    // Run the simulation for multiple generations
+    // Main simulation loop
     for (int generationCount = 0; window.isOpen(); ++generationCount)
     {
-        Event event;
+        sf::Event event;
         while (window.pollEvent(event))
         {
-            if (event.type == Event::Closed ||
-                Keyboard::isKeyPressed(Keyboard::Escape))
+            if (event.type == sf::Event::Closed ||
+                sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
             {
                 window.close();
             }
         }
 
-        // Launch CUDA kernel to update the grid
+        // Launch CUDA kernel
         updateGridKernel<<<gridDim, blockDim>>>(d_gridCurrent, d_gridNext,
                                                 gridWidth, gridHeight);
 
-        // Check for kernel launch errors
+        // Check for kernel errors
         cudaError_t err = cudaGetLastError();
         if (err != cudaSuccess)
         {
             std::cerr << "CUDA kernel launch failed: "
                       << cudaGetErrorString(err) << std::endl;
+            cudaFree(d_gridCurrent);
+            cudaFree(d_gridNext);
             exit(EXIT_FAILURE);
         }
 
+        // Synchronize before copying back
+        cudaDeviceSynchronize();
+
         // Copy the updated grid back to host
-        cudaMemcpy(flatGridCurrent.data(), d_gridNext, gridSize,
+        cudaMemcpy(flatGridCurrent.data(), d_gridNext,
+                   gridWidth * gridHeight * sizeof(bool),
                    cudaMemcpyDeviceToHost);
 
-        // Transfer back to 2D vector format for rendering
-        for (int y = 0; y < gridHeight; ++y)
+        // Convert flat array back to 2D grid for rendering
+        for (int y = 0; y < gridHeight; y++)
         {
-            for (int x = 0; x < gridWidth; ++x)
+            for (int x = 0; x < gridWidth; x++)
             {
-                gridCurrent[x][y] = flatGridCurrent[x + y * gridWidth];
+                grid[x][y] = flatGridCurrent[x + y * gridWidth];
             }
         }
 
@@ -133,11 +129,11 @@ void normalMemSimulate(RenderWindow& window, int threadsPerBlock,
         {
             for (int y = 0; y < gridHeight; ++y)
             {
-                if (gridCurrent[x][y])
+                if (grid[x][y])
                 {
-                    RectangleShape cell(Vector2f(cellSize, cellSize));
+                    sf::RectangleShape cell(sf::Vector2f(cellSize, cellSize));
                     cell.setPosition(x * cellSize, y * cellSize);
-                    cell.setFillColor(Color::White);
+                    cell.setFillColor(sf::Color::White);
                     window.draw(cell);
                 }
             }
@@ -145,21 +141,22 @@ void normalMemSimulate(RenderWindow& window, int threadsPerBlock,
 
         window.display();
 
-        // Swap grids for the next generation
-        std::swap(gridCurrent, gridNext);
+        // Swap device pointers
+        bool* temp = d_gridCurrent;
+        d_gridCurrent = d_gridNext;
+        d_gridNext = temp;
 
-        // Check for performance every 100 generations
         if (generationCount % 100 == 0)
         {
-            cout << "Generation " << generationCount << " complete." << endl;
+            std::cout << "Generation " << generationCount << " complete."
+                      << std::endl;
         }
     }
 
-    // Free device memory
+    // Cleanup
     cudaFree(d_gridCurrent);
     cudaFree(d_gridNext);
 }
-
 // __global__ void vectorAddKernel(const float* A, const float* B, float* C, int
 // N)
 // {
