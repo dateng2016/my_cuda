@@ -6,7 +6,6 @@
 #include <cstdlib>
 #include <ctime>
 #include <iostream>
-#include <omp.h>
 #include <string>
 #include <vector>
 
@@ -47,26 +46,6 @@ int main(int argc, char* argv[])
     // FIXME:
     normalMemSimulate(window, threadsPerBlock, gridCurrent, gridNext, gridWidth,
                       gridHeight, cellSize);
-
-    // while (window.isOpen())
-    // {
-
-    //     sf::Event event;
-    //     while (window.pollEvent(event))
-    //     {
-    //         if (event.type == Event::Closed ||
-    //             Keyboard::isKeyPressed(Keyboard::Escape))
-    //         {
-    //             window.close();
-    //         }
-
-    //     }
-
-    //     window.clear();
-    //     // * Do the drawing here
-
-    //     window.display();
-    // }
 
     return 0;
 }

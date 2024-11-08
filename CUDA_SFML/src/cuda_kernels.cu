@@ -8,7 +8,6 @@
 using namespace std;
 using namespace sf;
 
-// CUDA kernel for updating the grid
 __global__ void updateGridKernel(bool* gridCurrent, bool* gridNext,
                                  int gridWidth, int gridHeight)
 {
@@ -52,32 +51,45 @@ void normalMemSimulate(RenderWindow& window, int threadsPerBlock,
                        vector<vector<bool>>& gridCurrent,
                        vector<vector<bool>>& gridNext, int gridWidth,
                        int gridHeight, int cellSize)
-//    TODO: Might NOT neet gridWidth and gridHeight
 {
+    // Flatten the grid for easier CUDA handling
+    bool* d_gridCurrent;
+    bool* d_gridNext;
 
-    // Initialize grid states on host
-    bool *d_gridCurrent, *d_gridNext;
+    size_t gridSize = gridWidth * gridHeight * sizeof(bool);
 
     // Allocate memory on device (GPU)
-    cudaMalloc((void**)&d_gridCurrent, gridWidth * gridHeight * sizeof(bool));
-    cudaMalloc((void**)&d_gridNext, gridWidth * gridHeight * sizeof(bool));
+    cudaMalloc((void**)&d_gridCurrent, gridSize);
+    cudaMalloc((void**)&d_gridNext, gridSize);
+
+    // Flatten 2D vectors to 1D array for copying to GPU
+    vector<bool> flatGridCurrent(gridWidth * gridHeight);
+    vector<bool> flatGridNext(gridWidth * gridHeight);
+
+    // Copy data from 2D vector to 1D array for both grids
+    for (int y = 0; y < gridHeight; ++y)
+    {
+        for (int x = 0; x < gridWidth; ++x)
+        {
+            flatGridCurrent[x + y * gridWidth] = gridCurrent[x][y];
+            flatGridNext[x + y * gridWidth] = gridNext[x][y];
+        }
+    }
 
     // Copy data from host (CPU) to device (GPU)
-    cudaMemcpy(d_gridCurrent, gridCurrent.data(),
-               gridWidth * gridHeight * sizeof(bool), cudaMemcpyHostToDevice);
-    cudaMemcpy(d_gridNext, gridNext.data(),
-               gridWidth * gridHeight * sizeof(bool), cudaMemcpyHostToDevice);
+    cudaMemcpy(d_gridCurrent, flatGridCurrent.data(), gridSize,
+               cudaMemcpyHostToDevice);
+    cudaMemcpy(d_gridNext, flatGridNext.data(), gridSize,
+               cudaMemcpyHostToDevice);
 
-    // Define block size (32 threads per block)
-    dim3 blockDim(threadsPerBlock, 1); // 32 threads in 1D (x-direction)
+    // Define block and grid size
+    dim3 blockDim(16, 16); // 16x16 threads per block
     dim3 gridDim((gridWidth + blockDim.x - 1) / blockDim.x,
-                 (gridHeight + blockDim.y - 1) /
-                     blockDim.y); // Grid size to cover all cells
+                 (gridHeight + blockDim.y - 1) / blockDim.y);
 
     // Run the simulation for multiple generations
     for (int generationCount = 0; window.isOpen(); ++generationCount)
     {
-
         Event event;
         while (window.pollEvent(event))
         {
@@ -102,19 +114,20 @@ void normalMemSimulate(RenderWindow& window, int threadsPerBlock,
         }
 
         // Copy the updated grid back to host
-        cudaMemcpy(gridCurrent.data(), d_gridNext,
-                   gridWidth * gridHeight * sizeof(bool),
+        cudaMemcpy(flatGridCurrent.data(), d_gridNext, gridSize,
                    cudaMemcpyDeviceToHost);
 
-        cout << "-----" << endl;
-        cout << gridCurrent.size() << endl << gridCurrent[0].size() << endl;
-        cout << "-----" << endl;
+        // Transfer back to 2D vector format for rendering
+        for (int y = 0; y < gridHeight; ++y)
+        {
+            for (int x = 0; x < gridWidth; ++x)
+            {
+                gridCurrent[x][y] = flatGridCurrent[x + y * gridWidth];
+            }
+        }
 
         window.clear();
 
-        cout << "-----" << endl;
-        cout << gridCurrent.size() << endl << gridCurrent[0].size() << endl;
-        cout << "-----" << endl;
         // Draw the grid
         for (int x = 0; x < gridWidth; ++x)
         {
@@ -133,7 +146,7 @@ void normalMemSimulate(RenderWindow& window, int threadsPerBlock,
         window.display();
 
         // Swap grids for the next generation
-        gridCurrent = gridNext;
+        std::swap(gridCurrent, gridNext);
 
         // Check for performance every 100 generations
         if (generationCount % 100 == 0)
