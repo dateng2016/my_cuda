@@ -25,11 +25,11 @@ void seedRandomGrid(vector<vector<uint8_t>>& grid, int gridWidth,
      */
 
     srand(static_cast<unsigned>(time(nullptr)));
-    for (int x = 0; x < gridHeight; ++x)
+    for (int y = 0; y < gridHeight; ++y)
     {
-        for (int y = 0; y < gridWidth; ++y)
+        for (int x = 0; x < gridWidth; ++x)
         {
-            grid[x][y] = (rand() % 2 == 0); // Randomly seed each pixel
+            grid[y][x] = (rand() % 2 == 0); // Randomly seed each pixel
         }
     }
 }
