@@ -51,6 +51,7 @@ int main(int argc, char* argv[])
     }
     else if (memoryType == "PINNED")
     {
+        cout << "hello" << endl;
         pinnedMemSimulate(window, threadsPerBlock, gridCurrent, gridNext,
                           gridWidth, gridHeight, cellSize, memoryType);
     }
