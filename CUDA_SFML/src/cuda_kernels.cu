@@ -67,13 +67,8 @@ void normalMemSimulate(RenderWindow& window, int threadsPerBlock,
     cudaMemcpy(d_gridNext, gridNext.data(),
                gridWidth * gridHeight * sizeof(bool), cudaMemcpyHostToDevice);
 
-    // // Define block size (32 threads per block)
-    // dim3 blockDim(threadsPerBlock, 1); // 32 threads in 1D (x-direction)
-    // dim3 gridDim((gridWidth + blockDim.x - 1) / blockDim.x,
-    //              (gridHeight + blockDim.y - 1) /
-    //                  blockDim.y); // Grid size to cover all cells
-
-    dim3 blockDim(16, 16); // 16x16 threads per block (2D block)
+    // Define block size (32 threads per block)
+    dim3 blockDim(threadsPerBlock, 1); // 32 threads in 1D (x-direction)
     dim3 gridDim((gridWidth + blockDim.x - 1) / blockDim.x,
                  (gridHeight + blockDim.y - 1) /
                      blockDim.y); // Grid size to cover all cells
@@ -122,6 +117,7 @@ void normalMemSimulate(RenderWindow& window, int threadsPerBlock,
                     cell.setPosition(x * cellSize, y * cellSize);
                     cell.setFillColor(Color::White);
                     window.draw(cell);
+                    cout << "Hello" << endl;
                 }
             }
         }
