@@ -32,6 +32,9 @@ int main(int argc, char* argv[])
     // * Calculate Grid Width and Height
     int gridWidth = windowWidth / cellSize;
     int gridHeight = windowHeight / cellSize;
+
+    cout << "Actual grid width and height are " << gridWidth << endl
+         << gridHeight << endl;
     // * Set up SFML window
     sf::RenderWindow window(sf::VideoMode(windowWidth, windowHeight),
                             "CUDA + SFML");
