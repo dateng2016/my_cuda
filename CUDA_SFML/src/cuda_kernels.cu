@@ -92,9 +92,6 @@ void normalMemSimulate(RenderWindow& window, int threadsPerBlock,
         updateGridKernel<<<gridDim, blockDim>>>(d_gridCurrent, d_gridNext,
                                                 gridWidth, gridHeight);
 
-        cout << "-----" << endl;
-        cout << gridCurrent.size() << endl << gridCurrent[0].size() << endl;
-        cout << "-----" << endl;
         // Check for kernel launch errors
         cudaError_t err = cudaGetLastError();
         if (err != cudaSuccess)
@@ -104,6 +101,9 @@ void normalMemSimulate(RenderWindow& window, int threadsPerBlock,
             exit(EXIT_FAILURE);
         }
 
+        cout << "-----" << endl;
+        cout << gridCurrent.size() << endl << gridCurrent[0].size() << endl;
+        cout << "-----" << endl;
         // Copy the updated grid back to host
         cudaMemcpy(gridCurrent.data(), d_gridNext,
                    gridWidth * gridHeight * sizeof(bool),
