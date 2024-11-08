@@ -24,9 +24,9 @@ void seedRandomGrid(vector<vector<bool>>& grid, int gridWidth, int gridHeight)
      */
 
     srand(static_cast<unsigned>(time(nullptr)));
-    for (int x = 0; x < gridWidth; ++x)
+    for (int x = 0; x < gridHeight; ++x)
     {
-        for (int y = 0; y < gridHeight; ++y)
+        for (int y = 0; y < gridWidth; ++y)
         {
             grid[x][y] = (rand() % 2 == 0); // Randomly seed each pixel
         }
