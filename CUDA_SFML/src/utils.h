@@ -4,8 +4,9 @@
 
 using namespace std;
 
-void seedRandomGrid(vector<vector<bool>>& grid, int gridWidth, int gridHeight);
-int countNeighbors(const vector<vector<bool>>& grid, int x, int y,
+void seedRandomGrid(vector<vector<uint8_t>>& grid, int gridWidth,
+                    int gridHeight);
+int countNeighbors(const vector<vector<uint8_t>>& grid, int x, int y,
                    int gridWidth, int gridHeight);
 
 void parseArguments(int argc, char* argv[], int& numThreads, int& cellSize,

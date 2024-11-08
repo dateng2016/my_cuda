@@ -9,7 +9,7 @@ using namespace std;
 using namespace sf;
 
 // CUDA kernel for updating the grid
-__global__ void updateGridKernel(bool* gridCurrent, bool* gridNext,
+__global__ void updateGridKernel(uint8_t* gridCurrent, uint8_t* gridNext,
                                  int gridWidth, int gridHeight)
 {
     int x = blockIdx.x * blockDim.x + threadIdx.x; // x index of cell
@@ -49,11 +49,11 @@ __global__ void updateGridKernel(bool* gridCurrent, bool* gridNext,
 }
 
 void normalMemSimulate(RenderWindow& window, int threadsPerBlock,
-                       vector<vector<bool>>& gridCurrent,
-                       vector<vector<bool>>& gridNext, int gridWidth,
+                       vector<vector<uint8_t>>& gridCurrent,
+                       vector<vector<uint8_t>>& gridNext, int gridWidth,
                        int gridHeight, int cellSize)
 {
-    bool *d_gridCurrent, *d_gridNext;
+    uint8_t *d_gridCurrent, *d_gridNext;
     int N = gridWidth * gridHeight;
     size_t size = N * sizeof(bool);
     // * Allocate Memory on GPU
@@ -101,7 +101,7 @@ void normalMemSimulate(RenderWindow& window, int threadsPerBlock,
             d_gridCurrent, d_gridNext, gridWidth, gridHeight);
 
         cudaDeviceSynchronize();
-        bool* temp = d_gridCurrent;
+        uint8_t* temp = d_gridCurrent;
         d_gridCurrent = d_gridNext;
         d_gridNext = temp;
 

@@ -36,9 +36,10 @@ int main(int argc, char* argv[])
     sf::RenderWindow window(sf::VideoMode(windowWidth, windowHeight),
                             "CUDA + SFML");
     window.setFramerateLimit(120); // Set frame rate to control speed
-    vector<vector<bool>> gridCurrent(gridHeight,
-                                     vector<bool>(gridWidth, false));
-    vector<vector<bool>> gridNext(gridHeight, vector<bool>(gridWidth, false));
+    vector<vector<uint8_t>> gridCurrent(gridHeight,
+                                        vector<uint8_t>(gridWidth, false));
+    vector<vector<uint8_t>> gridNext(gridHeight,
+                                     vector<uint8_t>(gridWidth, false));
 
     seedRandomGrid(gridCurrent, gridWidth, gridHeight);
     gridNext = gridCurrent;
