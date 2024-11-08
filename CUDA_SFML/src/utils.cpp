@@ -30,7 +30,6 @@ void seedRandomGrid(vector<vector<uint8_t>>& grid, int gridWidth,
         for (int x = 0; x < gridWidth; ++x)
         {
             grid[y][x] = (rand() % 2 == 0); // Randomly seed each pixel
-            cout << grid[y][x] << endl;
         }
     }
 }
