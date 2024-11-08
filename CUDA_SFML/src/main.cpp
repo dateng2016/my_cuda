@@ -41,9 +41,6 @@ int main(int argc, char* argv[])
                                      vector<bool>(gridHeight, false));
     vector<vector<bool>> gridNext(gridWidth, vector<bool>(gridHeight, false));
 
-    cout << "-----" << endl;
-    cout << gridCurrent.size() << endl << gridCurrent[0].size() << endl;
-
     seedRandomGrid(gridCurrent, gridWidth, gridHeight);
     gridNext = gridCurrent;
 
