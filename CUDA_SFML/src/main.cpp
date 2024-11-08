@@ -46,7 +46,7 @@ int main(int argc, char* argv[])
 
     // FIXME:
     normalMemSimulate(window, threadsPerBlock, gridCurrent, gridNext, gridWidth,
-                      gridHeight, cellSize);
+                      gridHeight, cellSize, memoryType);
 
     return 0;
 }
