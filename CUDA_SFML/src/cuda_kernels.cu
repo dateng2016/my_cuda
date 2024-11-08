@@ -58,8 +58,10 @@ void normalMemSimulate(RenderWindow& window, int threadsPerBlock,
     int N = gridWidth * gridHeight;
     size_t size = N * sizeof(uint8_t);
     // * Allocate Memory on GPU
-    cudaMalloc(&d_gridCurrent, size);
-    cudaMalloc(&d_gridNext, size);
+    // cudaMalloc(&d_gridCurrent, size);
+    // cudaMalloc(&d_gridNext, size);
+    cudaMallocManaged(&d_gridCurrent, size);
+    cudaMallocManaged(&d_gridNext, size);
 
     // * Flatten the vectors
     vector<uint8_t> flatGridCurrent;
