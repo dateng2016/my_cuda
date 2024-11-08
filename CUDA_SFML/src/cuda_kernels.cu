@@ -101,7 +101,7 @@ void normalMemSimulate(RenderWindow& window, int threadsPerBlock,
             d_gridCurrent, d_gridNext, gridWidth, gridHeight);
 
         cudaDeviceSynchronize();
-        uint8_t* temp = d_gridCurrent;
+        bool* temp = d_gridCurrent;
         d_gridCurrent = d_gridNext;
         d_gridNext = temp;
 
