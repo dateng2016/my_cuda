@@ -4,9 +4,10 @@
 
 using namespace std;
 
-void seedRandomGrid(vector<vector<int>>& grid, int gridWidth, int gridHeight);
-int countNeighbors(const vector<vector<int>>& grid, int x, int y, int gridWidth,
-                   int gridHeight);
+void seedRandomGrid(vector<vector<uint8_t>>& grid, int gridWidth,
+                    int gridHeight);
+int countNeighbors(const vector<vector<uint8_t>>& grid, int x, int y,
+                   int gridWidth, int gridHeight);
 
 void parseArguments(int argc, char* argv[], int& numThreads, int& cellSize,
                     int& width, int& height, std::string& memType);

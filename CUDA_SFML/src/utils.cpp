@@ -4,7 +4,8 @@ using namespace std;
 #include <cassert>
 #include <cstring>
 
-void seedRandomGrid(vector<vector<int>>& grid, int gridWidth, int gridHeight)
+void seedRandomGrid(vector<vector<uint8_t>>& grid, int gridWidth,
+                    int gridHeight)
 {
     /**
      * Seeds a 2D grid with random boolean values, representing cells in a

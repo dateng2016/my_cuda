@@ -9,8 +9,8 @@ using namespace std;
 using namespace sf;
 
 // CUDA kernel for updating the grid
-__global__ void updateGridKernel(int* gridCurrent, int* gridNext, int gridWidth,
-                                 int gridHeight)
+__global__ void updateGridKernel(uint8_t* gridCurrent, uint8_t* gridNext,
+                                 int gridWidth, int gridHeight)
 {
     int x = blockIdx.x * blockDim.x + threadIdx.x; // x index of cell
     int y = blockIdx.y * blockDim.y + threadIdx.y; // y index of cell
@@ -53,20 +53,20 @@ __global__ void updateGridKernel(int* gridCurrent, int* gridNext, int gridWidth,
 }
 
 void normalMemSimulate(RenderWindow& window, int threadsPerBlock,
-                       vector<vector<int>>& gridCurrent,
-                       vector<vector<int>>& gridNext, int gridWidth,
+                       vector<vector<uint8_t>>& gridCurrent,
+                       vector<vector<uint8_t>>& gridNext, int gridWidth,
                        int gridHeight, int cellSize)
 {
-    int *d_gridCurrent, *d_gridNext;
+    uint8_t *d_gridCurrent, *d_gridNext;
     int N = gridWidth * gridHeight;
-    size_t size = N * sizeof(int);
+    size_t size = N * sizeof(uint8_t);
     // * Allocate Memory on GPU
     cudaMalloc(&d_gridCurrent, size);
     cudaMalloc(&d_gridNext, size);
 
     // * Flatten the vectors
-    vector<int> flatGridCurrent;
-    vector<int> flatGridNext;
+    vector<uint8_t> flatGridCurrent;
+    vector<uint8_t> flatGridNext;
     flatGridCurrent.reserve(gridWidth *
                             gridHeight); // Reserve memory for efficiency
     flatGridNext.reserve(gridWidth *
@@ -76,8 +76,8 @@ void normalMemSimulate(RenderWindow& window, int threadsPerBlock,
     {
         for (int x = 0; x < gridWidth; ++x)
         {
-            flatGridCurrent.push_back(static_cast<int>(gridCurrent[y][x]));
-            flatGridNext.push_back(static_cast<int>(gridNext[y][x]));
+            flatGridCurrent.push_back(static_cast<uint8_t>(gridCurrent[y][x]));
+            flatGridNext.push_back(static_cast<uint8_t>(gridNext[y][x]));
         }
     }
     // * Copy vectors from host to device
@@ -134,7 +134,7 @@ void normalMemSimulate(RenderWindow& window, int threadsPerBlock,
         // * We do the memory swap INSIDE the GPU so we do not have to
         // * move the memory from HOST to GPU AGAIN.
 
-        int* temp = d_gridCurrent;
+        uint8_t* temp = d_gridCurrent;
         d_gridCurrent = d_gridNext;
         d_gridNext = temp;
         // cudaMemcpy(d_gridCurrent, flatGridCurrent.data(), size,
