@@ -13,7 +13,7 @@ using namespace std;
 using namespace sf;
 
 int threadsPerBlock = 32; // -n (default to 32)
-int cellSize = 5;         // -c (default to 5)
+int cellSize = 10;        // -c (default to 5)
 int windowWidth = 800;    // -x (default to 800)
 int windowHeight = 600;   // -y (default to 600)
 string memoryType = "NORMAL";
