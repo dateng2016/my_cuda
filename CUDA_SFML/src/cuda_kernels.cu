@@ -223,6 +223,7 @@ void pinnedMemSimulate(RenderWindow& window, int threadsPerBlock,
     // * Start the simulation
     while (window.isOpen())
     {
+        generationCount++;
         Event event;
         while (window.pollEvent(event))
         {
@@ -246,7 +247,6 @@ void pinnedMemSimulate(RenderWindow& window, int threadsPerBlock,
         totalTime += duration;
 
         // * END of timing count
-        cout << "hello" << endl;
         // * Handle the STDOUT here
         if (!startCounting && generationCount > 10)
         {
@@ -348,6 +348,7 @@ void managedMemSimulate(RenderWindow& window, int threadsPerBlock,
     // * Start the simulation
     while (window.isOpen())
     {
+        generationCount++;
         Event event;
         while (window.pollEvent(event))
         {
