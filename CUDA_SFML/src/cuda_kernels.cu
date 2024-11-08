@@ -215,6 +215,10 @@ void pinnedMemSimulate(RenderWindow& window, int threadsPerBlock,
     // * Determine the number of blocks per grid.
     int blocksPerGrid = (N + threadsPerBlock - 1) / threadsPerBlock;
 
+    // * Initialize the time count
+    bool startCounting = false;
+    int generationCount = 0;
+    long long totalTime = 0;
     // * Start the simulation
     while (window.isOpen())
     {
@@ -227,10 +231,38 @@ void pinnedMemSimulate(RenderWindow& window, int threadsPerBlock,
                 window.close();
             }
         }
+        // * Do the generation time count
+        auto start = chrono::high_resolution_clock::now();
+
         updateGridKernel<<<blocksPerGrid, threadsPerBlock>>>(
             d_gridCurrent, d_gridNext, gridWidth, gridHeight);
 
         cudaDeviceSynchronize();
+
+        auto end = chrono::high_resolution_clock::now();
+        long long duration =
+            chrono::duration_cast<chrono::microseconds>(end - start).count();
+        totalTime += duration;
+
+        // * END of timing count
+
+        // * Handle the STDOUT here
+        if (!startCounting && generationCount > 100)
+        {
+            // * We only start counting after the GPU "warms up"
+            startCounting = true;
+            totalTime = 0;
+            generationCount = 0;
+        }
+        if (startCounting && generationCount == 100)
+        {
+            cout << "100 generations took " << totalTime
+                 << " microseconds with " << threadsPerBlock
+                 << " threads per block using Normal memory allocation."
+                 << endl;
+            generationCount = 0;
+            totalTime = 0;
+        }
 
         // * We move the memory from GPU to host to render the image
         cudaMemcpy(flatGridCurrent.data(), d_gridNext, size,
@@ -308,6 +340,10 @@ void managedMemSimulate(RenderWindow& window, int threadsPerBlock,
     // * Determine the number of blocks per grid.
     int blocksPerGrid = (N + threadsPerBlock - 1) / threadsPerBlock;
 
+    // * Initialize the time count
+    bool startCounting = false;
+    int generationCount = 0;
+    long long totalTime = 0;
     // * Start the simulation
     while (window.isOpen())
     {
@@ -320,10 +356,38 @@ void managedMemSimulate(RenderWindow& window, int threadsPerBlock,
                 window.close();
             }
         }
+        // * Do the generation time count
+        auto start = chrono::high_resolution_clock::now();
+
         updateGridKernel<<<blocksPerGrid, threadsPerBlock>>>(
             d_gridCurrent, d_gridNext, gridWidth, gridHeight);
 
         cudaDeviceSynchronize();
+
+        auto end = chrono::high_resolution_clock::now();
+        long long duration =
+            chrono::duration_cast<chrono::microseconds>(end - start).count();
+        totalTime += duration;
+
+        // * END of timing count
+
+        // * Handle the STDOUT here
+        if (!startCounting && generationCount > 100)
+        {
+            // * We only start counting after the GPU "warms up"
+            startCounting = true;
+            totalTime = 0;
+            generationCount = 0;
+        }
+        if (startCounting && generationCount == 100)
+        {
+            cout << "100 generations took " << totalTime
+                 << " microseconds with " << threadsPerBlock
+                 << " threads per block using Normal memory allocation."
+                 << endl;
+            generationCount = 0;
+            totalTime = 0;
+        }
 
         // * We move the memory from GPU to host to render the image
         cudaMemcpy(flatGridCurrent.data(), d_gridNext, size,
