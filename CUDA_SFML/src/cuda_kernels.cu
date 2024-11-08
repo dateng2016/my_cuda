@@ -60,18 +60,48 @@ void normalMemSimulate(RenderWindow& window, int threadsPerBlock,
     cudaMalloc(&d_gridCurrent, size);
     cudaMalloc(&d_gridNext, size);
 
-    // * Copy vectors from host to device
-    vector<bool> flattenedGrid;
-    flattenedGrid.reserve(gridWidth *
-                          gridHeight); // Reserve memory for efficiency
+    // * Flatten the vectors
+    vector<bool> flatGridCurrent;
+    vector<bool> flatGridNext;
+    flatGridCurrent.reserve(gridWidth *
+                            gridHeight); // Reserve memory for efficiency
+    flatGridNext.reserve(gridWidth *
+                         gridHeight); // Reserve memory for efficiency
 
-    // Iterate through each row and then each column in the row
     for (int y = 0; y < gridHeight; ++y)
     {
         for (int x = 0; x < gridWidth; ++x)
         {
-            flattenedGrid.push_back(gridCurrent[y][x]);
+            flatGridCurrent.push_back(gridCurrent[y][x]);
+            flatGridNext.push_back(gridNext[y][x]);
         }
+    }
+    // * Copy vectors from host to device
+    cudaMemcpy(d_gridCurrent, flatGridCurrent.data(), size,
+               cudaMemcpyHostToDevice);
+    cudaMemcpy(d_gridNext, flatGridNext, size, cudaMemcpyHostToDevice);
+
+    // * Determine the number of blocks per grid.
+    blocksPerGrid = (N + threadsPerBlock - 1) / threadsPerBlock;
+
+    // * Start the simulation
+    while (window.isOpen())
+    {
+        Event event;
+        while (window.pollEvent(event))
+        {
+            if (event.type == Event::Closed ||
+                Keyboard::isKeyPressed(Keyboard::Escape))
+            {
+                window.close();
+            }
+        }
+
+        updateGridKernel<<<blocksPerGrid, threadsPerBlock>>>(
+            d_gridCurrent, d_gridNext, gridWidth, gridHeight)
+
+        // bool* gridCurrent, bool* gridNext,
+        // int gridWidth, int gridHeight
     }
 }
 
