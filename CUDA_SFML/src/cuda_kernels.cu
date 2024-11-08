@@ -61,8 +61,8 @@ void normalMemSimulate(RenderWindow& window, int threadsPerBlock,
     cudaMalloc(&d_gridNext, size);
 
     // * Flatten the vectors
-    vector<bool> flatGridCurrent;
-    vector<bool> flatGridNext;
+    vector<uint8_t> flatGridCurrent;
+    vector<uint8_t> flatGridNext;
     flatGridCurrent.reserve(gridWidth *
                             gridHeight); // Reserve memory for efficiency
     flatGridNext.reserve(gridWidth *
@@ -72,8 +72,8 @@ void normalMemSimulate(RenderWindow& window, int threadsPerBlock,
     {
         for (int x = 0; x < gridWidth; ++x)
         {
-            flatGridCurrent.push_back(gridCurrent[y][x]);
-            flatGridNext.push_back(gridNext[y][x]);
+            flatGridCurrent.push_back(static_cast<uint8_t> gridCurrent[y][x]);
+            flatGridNext.push_back(static_cast<uint8_t> gridNext[y][x]);
         }
     }
     // * Copy vectors from host to device
