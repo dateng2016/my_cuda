@@ -13,7 +13,7 @@ using namespace std;
 using namespace sf;
 
 int threadsPerBlock = 32; // -n (default to 32)
-int cellSize = 10;        // -c (default to 5)
+int cellSize = 5;         // -c (default to 5)
 int windowWidth = 800;    // -x (default to 800)
 int windowHeight = 600;   // -y (default to 600)
 string memoryType = "NORMAL";
@@ -35,7 +35,7 @@ int main(int argc, char* argv[])
     // * Set up SFML window
     sf::RenderWindow window(sf::VideoMode(windowWidth, windowHeight),
                             "CUDA + SFML");
-    window.setFramerateLimit(120); // Set frame rate to control speed
+    window.setFramerateLimit(12); // Set frame rate to control speed
     vector<vector<uint8_t>> gridCurrent(gridHeight,
                                         vector<uint8_t>(gridWidth, false));
     vector<vector<uint8_t>> gridNext(gridHeight,
