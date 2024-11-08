@@ -77,6 +77,9 @@ void normalMemSimulate(RenderWindow& window, int threadsPerBlock,
     // Run the simulation for multiple generations
     for (int generationCount = 0; window.isOpen(); ++generationCount)
     {
+        cout << "-----" << endl;
+        cout << gridCurrent.size() << endl << gridCurrent[0].size() << endl;
+        cout << "-----" << endl;
         Event event;
         while (window.pollEvent(event))
         {
