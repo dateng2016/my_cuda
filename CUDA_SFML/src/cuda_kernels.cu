@@ -38,15 +38,14 @@ __global__ void updateGridKernel(uint8_t* gridCurrent, uint8_t* gridNext,
     }
 
     // Conway's Game of Life rules
-    int idx = x + y * gridWidth;
-    if (gridCurrent[idx])
+
+    if (gridCurrent[l])
     {
-        gridNext[idx] =
-            (neighbors == 2 || neighbors == 3); // Cell remains alive
+        gridNext[l] = (neighbors == 2 || neighbors == 3); // Cell remains alive
     }
     else
     {
-        gridNext[idx] = (neighbors == 3); // Cell becomes alive
+        gridNext[l] = (neighbors == 3); // Cell becomes alive
     }
 }
 
