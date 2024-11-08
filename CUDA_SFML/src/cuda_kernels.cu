@@ -53,7 +53,7 @@ void normalMemSimulate(RenderWindow& window, int threadsPerBlock,
                        vector<vector<bool>>& gridNext, int gridWidth,
                        int gridHeight, int cellSize)
 {
-    uint8_t *d_gridCurrent, *d_gridNext;
+    bool *d_gridCurrent, *d_gridNext;
     int N = gridWidth * gridHeight;
     size_t size = N * sizeof(bool);
     // * Allocate Memory on GPU
