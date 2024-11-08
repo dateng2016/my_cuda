@@ -102,6 +102,29 @@ void normalMemSimulate(RenderWindow& window, int threadsPerBlock,
 
         cudaDeviceSynchronize();
 
+        // * We move the memory from GPU to host to render the image
+        cudaMemcpy(flatGridCurrent.data(), d_gridNext, size,
+                   cudaMemcpyDeviceToHost);
+        // * Start Rendering
+
+        window.clear();
+
+        for (int y = 0; y < gridHeight; ++y)
+        {
+            for (int x = 0; x < gridWidth; ++x)
+            {
+                if (flatGridCurrent[y * gridWidth + x])
+                {
+                    RectangleShape cell(Vector2f(cellSize, cellSize));
+                    cell.setPosition(y * cellSize, x * cellSize);
+                    cell.setFillColor(Color::White);
+                    window.draw(cell);
+                }
+            }
+        }
+
+        window.display();
+
         // * We do the memory swap INSIDE the GPU so we do not have to
         // * Move the memory from HOST to GPU AGAIN.
         uint8_t* temp = d_gridCurrent;
