@@ -121,10 +121,11 @@ void normalMemSimulate(RenderWindow& window, int threadsPerBlock,
         // * END of timing count
 
         // * Handle the STDOUT here
-        if (!startCounting && generationCount > 1000)
+        if (!startCounting && generationCount > 100)
         {
             // * We only start counting after the GPU "warms up"
             startCounting = true;
+            totalTime = 0;
             generationCount = 0;
         }
         if (startCounting && generationCount == 100)
