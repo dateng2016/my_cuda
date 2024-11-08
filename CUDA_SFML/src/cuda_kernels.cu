@@ -1,6 +1,4 @@
-// cuda_kernels.cu
-#include "cuda_kernels.cuh"
-#include "utils.h"
+#include <SFML/Graphics.hpp>
 #include <cuda_runtime.h>
 #include <iostream>
 #include <vector>
@@ -9,7 +7,7 @@ using namespace std;
 using namespace sf;
 
 // CUDA kernel for updating the grid
-__global__ void updateGridKernel(bool* gridCurrent, bool* gridNext,
+__global__ void updateGridKernel(uint8_t* gridCurrent, uint8_t* gridNext,
                                  int gridWidth, int gridHeight)
 {
     int x = blockIdx.x * blockDim.x + threadIdx.x; // x index of cell
@@ -49,27 +47,34 @@ __global__ void updateGridKernel(bool* gridCurrent, bool* gridNext,
 }
 
 void normalMemSimulate(RenderWindow& window, int threadsPerBlock,
-                       vector<vector<bool>>& gridCurrent,
-                       vector<vector<bool>>& gridNext, int gridWidth,
+                       vector<vector<uint8_t>>& gridCurrent,
+                       vector<vector<uint8_t>>& gridNext, int gridWidth,
                        int gridHeight, int cellSize)
-//    TODO: Might NOT neet gridWidth and gridHeight
 {
-
     // Initialize grid states on host
-    bool *d_gridCurrent, *d_gridNext;
+    uint8_t *d_gridCurrent, *d_gridNext;
 
     // Allocate memory on device (GPU)
-    cudaMalloc((void**)&d_gridCurrent, gridWidth * gridHeight * sizeof(bool));
-    cudaMalloc((void**)&d_gridNext, gridWidth * gridHeight * sizeof(bool));
+    cudaError_t err = cudaMalloc((void**)&d_gridCurrent,
+                                 gridWidth * gridHeight * sizeof(uint8_t));
+    if (err != cudaSuccess)
+    {
+        std::cerr << "CUDA memory allocation failed: "
+                  << cudaGetErrorString(err) << std::endl;
+        exit(EXIT_FAILURE);
+    }
+    cudaMalloc((void**)&d_gridNext, gridWidth * gridHeight * sizeof(uint8_t));
 
     // Copy data from host (CPU) to device (GPU)
-    cudaMemcpy(d_gridCurrent, gridCurrent.data(),
-               gridWidth * gridHeight * sizeof(bool), cudaMemcpyHostToDevice);
-    cudaMemcpy(d_gridNext, gridNext.data(),
-               gridWidth * gridHeight * sizeof(bool), cudaMemcpyHostToDevice);
+    cudaMemcpy(d_gridCurrent, gridCurrent.data()->data(),
+               gridWidth * gridHeight * sizeof(uint8_t),
+               cudaMemcpyHostToDevice);
+    cudaMemcpy(d_gridNext, gridNext.data()->data(),
+               gridWidth * gridHeight * sizeof(uint8_t),
+               cudaMemcpyHostToDevice);
 
-    // Define block size (32 threads per block)
-    dim3 blockDim(threadsPerBlock, 1); // 32 threads in 1D (x-direction)
+    // Define block size (16x16 threads per block)
+    dim3 blockDim(16, 16); // 16x16 threads in 2D blocks
     dim3 gridDim((gridWidth + blockDim.x - 1) / blockDim.x,
                  (gridHeight + blockDim.y - 1) /
                      blockDim.y); // Grid size to cover all cells
@@ -77,7 +82,6 @@ void normalMemSimulate(RenderWindow& window, int threadsPerBlock,
     // Run the simulation for multiple generations
     for (int generationCount = 0; window.isOpen(); ++generationCount)
     {
-
         Event event;
         while (window.pollEvent(event))
         {
@@ -102,19 +106,12 @@ void normalMemSimulate(RenderWindow& window, int threadsPerBlock,
         }
 
         // Copy the updated grid back to host
-        cudaMemcpy(gridCurrent.data(), d_gridNext,
-                   gridWidth * gridHeight * sizeof(bool),
+        cudaMemcpy(gridCurrent.data()->data(), d_gridNext,
+                   gridWidth * gridHeight * sizeof(uint8_t),
                    cudaMemcpyDeviceToHost);
-
-        cout << "-----" << endl;
-        cout << gridCurrent.size() << endl << gridCurrent[0].size() << endl;
-        cout << "-----" << endl;
 
         window.clear();
 
-        cout << "-----" << endl;
-        cout << gridCurrent.size() << endl << gridCurrent[0].size() << endl;
-        cout << "-----" << endl;
         // Draw the grid
         for (int x = 0; x < gridWidth; ++x)
         {
@@ -146,60 +143,3 @@ void normalMemSimulate(RenderWindow& window, int threadsPerBlock,
     cudaFree(d_gridCurrent);
     cudaFree(d_gridNext);
 }
-
-// __global__ void vectorAddKernel(const float* A, const float* B, float* C, int
-// N)
-// {
-//     int i = blockIdx.x * blockDim.x + threadIdx.x;
-//     if (i < N)
-//     {
-//         C[i] = A[i] + B[i];
-//     }
-// }
-
-// void vectorAdd(const float* A, const float* B, float* C, int N)
-// {
-//     float *d_A, *d_B, *d_C;
-//     size_t size = N * sizeof(float);
-
-//     // Allocate memory on GPU
-//     cudaMalloc(&d_A, size);
-//     cudaMalloc(&d_B, size);
-//     cudaMalloc(&d_C, size);
-
-//     // Copy vectors from host to device
-//     cudaMemcpy(d_A, A, size, cudaMemcpyHostToDevice);
-//     cudaMemcpy(d_B, B, size, cudaMemcpyHostToDevice);
-
-//     // Launch kernel
-//     int threadsPerBlock = 32;
-//     int blocksPerGrid = (N + threadsPerBlock - 1) / threadsPerBlock;
-//     std::cout << "blocksPerGrid = " << blocksPerGrid << std::endl;
-
-//      vectorAddKernel<<<blocksPerGrid, threadsPerBlock>>>(d_A, d_B, d_C, N);
-
-//     // Check for kernel launch errors
-//     cudaError_t err = cudaGetLastError();
-//     cout << "Error DETECTION before" << endl;
-//     if (err != cudaSuccess)
-//     {
-//         std::cerr << "CUDA kernel launch failed: " << cudaGetErrorString(err)
-//                   << std::endl;
-//         // exit(EXIT_FAILURE);
-//     }
-//     cout << "Error DETECTION AFTER" << endl;
-
-//     cudaDeviceSynchronize();
-//     // Copy result back to host
-//     cudaMemcpy(C, d_C, size, cudaMemcpyDeviceToHost);
-
-//     for (int i = 0; i < 10; ++i)
-//     {
-//         std::cout << "C[" << i << "] = " << C[i] << std::endl;
-//     }
-
-//     // Free memory on GPU
-//     cudaFree(d_A);
-//     cudaFree(d_B);
-//     cudaFree(d_C);
-// }
