@@ -98,7 +98,7 @@ void normalMemSimulate(RenderWindow& window, int threadsPerBlock,
         }
 
         updateGridKernel<<<blocksPerGrid, threadsPerBlock>>>(
-            d_gridCurrent, d_gridNext, gridWidth, gridHeight)
+            d_gridCurrent, d_gridNext, gridWidth, gridHeight);
 
         // bool* gridCurrent, bool* gridNext,
         // int gridWidth, int gridHeight
