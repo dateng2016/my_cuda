@@ -31,10 +31,6 @@ __global__ void updateGridKernel(uint8_t* gridCurrent, uint8_t* gridNext,
                 !(dx == 0 && dy == 0))
             {
                 neighbors += gridCurrent[nx + ny * gridWidth];
-                // if (gridCurrent[nx + ny * gridWidth])
-                // {
-                //     neighbors += 1;
-                // }
             }
         }
     }
@@ -100,7 +96,7 @@ void normalMemSimulate(RenderWindow& window, int threadsPerBlock,
                 window.close();
             }
         }
-
+        cout << blocksPerGrid << endl << threadsPerBlock << endl;
         updateGridKernel<<<blocksPerGrid, threadsPerBlock>>>(
             d_gridCurrent, d_gridNext, gridWidth, gridHeight);
 
