@@ -53,7 +53,7 @@ void normalMemSimulate(RenderWindow& window, int threadsPerBlock,
                        vector<vector<bool>>& gridNext, int gridWidth,
                        int gridHeight, int cellSize)
 {
-    bool *d_gridCurrent, *d_gridNext;
+    uint8_t *d_gridCurrent, *d_gridNext;
     int N = gridWidth * gridHeight;
     size_t size = N * sizeof(bool);
     // * Allocate Memory on GPU
@@ -99,6 +99,11 @@ void normalMemSimulate(RenderWindow& window, int threadsPerBlock,
 
         updateGridKernel<<<blocksPerGrid, threadsPerBlock>>>(
             d_gridCurrent, d_gridNext, gridWidth, gridHeight);
+
+        cudaDeviceSynchronize();
+        uint8_t* temp = d_gridCurrent;
+        d_gridCurrent = d_gridNext;
+        d_gridNext = temp;
 
         // bool* gridCurrent, bool* gridNext,
         // int gridWidth, int gridHeight
