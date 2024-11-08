@@ -12,8 +12,10 @@ using namespace sf;
 __global__ void updateGridKernel(uint8_t* gridCurrent, uint8_t* gridNext,
                                  int gridWidth, int gridHeight)
 {
-    int x = blockIdx.x * blockDim.x + threadIdx.x; // x index of cell
-    int y = blockIdx.y * blockDim.y + threadIdx.y; // y index of cell
+    int l = blockIdx.x * blockDim.x + threadIdx.x; // x index of cell
+    // int y = blockIdx.y * blockDim.y + threadIdx.y; // y index of cell
+    int y = l / gridWidth;
+    int x = l % gridWidth;
 
     if (x >= gridWidth || y >= gridHeight)
         return; // Boundary check
