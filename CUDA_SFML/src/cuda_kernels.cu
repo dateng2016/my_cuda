@@ -107,14 +107,15 @@ void normalMemSimulate(RenderWindow& window, int threadsPerBlock,
         window.clear();
 
         // Draw the grid
+        cout << gridWidth << endl
+             << gridHeight << endl
+             << gridCurrent.size() << endl
+             << gridCurrent[0].size() << endl;
         for (int x = 0; x < gridWidth; ++x)
         {
             for (int y = 0; y < gridHeight; ++y)
             {
-                cout << x << ", " << y << endl;
-                cout << gridCurrent.size() << endl;
-                // if (gridCurrent[x][y])
-                if (false)
+                if (gridCurrent[x][y])
                 {
                     RectangleShape cell(Vector2f(cellSize, cellSize));
                     cell.setPosition(x * cellSize, y * cellSize);
