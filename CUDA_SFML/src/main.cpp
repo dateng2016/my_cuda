@@ -33,8 +33,6 @@ int main(int argc, char* argv[])
     int gridWidth = windowWidth / cellSize;
     int gridHeight = windowHeight / cellSize;
 
-    cout << "Actual grid width and height are " << gridWidth << endl
-         << gridHeight << endl;
     // * Set up SFML window
     sf::RenderWindow window(sf::VideoMode(windowWidth, windowHeight),
                             "CUDA + SFML");
@@ -42,6 +40,9 @@ int main(int argc, char* argv[])
     vector<vector<bool>> gridCurrent(gridWidth,
                                      vector<bool>(gridHeight, false));
     vector<vector<bool>> gridNext(gridWidth, vector<bool>(gridHeight, false));
+
+    cout << "-----" << endl;
+    cout << gridCurrent.size() << endl << gridCurrent[0].size() << endl;
 
     seedRandomGrid(gridCurrent, gridWidth, gridHeight);
     gridNext = gridCurrent;
