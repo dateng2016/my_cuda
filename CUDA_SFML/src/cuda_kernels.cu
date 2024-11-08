@@ -67,8 +67,13 @@ void normalMemSimulate(RenderWindow& window, int threadsPerBlock,
     cudaMemcpy(d_gridNext, gridNext.data(),
                gridWidth * gridHeight * sizeof(bool), cudaMemcpyHostToDevice);
 
-    // Define block size (32 threads per block)
-    dim3 blockDim(threadsPerBlock, 1); // 32 threads in 1D (x-direction)
+    // // Define block size (32 threads per block)
+    // dim3 blockDim(threadsPerBlock, 1); // 32 threads in 1D (x-direction)
+    // dim3 gridDim((gridWidth + blockDim.x - 1) / blockDim.x,
+    //              (gridHeight + blockDim.y - 1) /
+    //                  blockDim.y); // Grid size to cover all cells
+
+    dim3 blockDim(16, 16); // 16x16 threads per block (2D block)
     dim3 gridDim((gridWidth + blockDim.x - 1) / blockDim.x,
                  (gridHeight + blockDim.y - 1) /
                      blockDim.y); // Grid size to cover all cells
@@ -111,7 +116,6 @@ void normalMemSimulate(RenderWindow& window, int threadsPerBlock,
         {
             for (int y = 0; y < gridHeight; ++y)
             {
-                cout << "hello" << endl;
                 if (gridCurrent[x][y])
                 {
                     RectangleShape cell(Vector2f(cellSize, cellSize));
