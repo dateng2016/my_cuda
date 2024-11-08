@@ -30,11 +30,11 @@ __global__ void updateGridKernel(uint8_t* gridCurrent, uint8_t* gridNext,
             if (nx >= 0 && nx < gridWidth && ny >= 0 && ny < gridHeight &&
                 !(dx == 0 && dy == 0))
             {
-                // neighbors += gridCurrent[nx + ny * gridWidth];
-                if (gridCurrent[nx + ny * gridWidth])
-                {
-                    neighbors += 1;
-                }
+                neighbors += gridCurrent[nx + ny * gridWidth];
+                // if (gridCurrent[nx + ny * gridWidth])
+                // {
+                //     neighbors += 1;
+                // }
             }
         }
     }
@@ -114,6 +114,7 @@ void normalMemSimulate(RenderWindow& window, int threadsPerBlock,
         window.clear();
 
         RectangleShape cell(Vector2f(cellSize, cellSize));
+
         for (int y = 0; y < gridHeight; ++y)
         {
             for (int x = 0; x < gridWidth; ++x)
