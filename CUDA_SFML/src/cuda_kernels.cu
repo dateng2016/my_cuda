@@ -140,58 +140,59 @@ void normalMemSimulate(RenderWindow& window, int threadsPerBlock,
     cudaFree(d_gridNext);
 }
 
-__global__ void vectorAddKernel(const float* A, const float* B, float* C, int N)
-{
-    int i = blockIdx.x * blockDim.x + threadIdx.x;
-    if (i < N)
-    {
-        C[i] = A[i] + B[i];
-    }
-}
+// __global__ void vectorAddKernel(const float* A, const float* B, float* C, int
+// N)
+// {
+//     int i = blockIdx.x * blockDim.x + threadIdx.x;
+//     if (i < N)
+//     {
+//         C[i] = A[i] + B[i];
+//     }
+// }
 
-void vectorAdd(const float* A, const float* B, float* C, int N)
-{
-    float *d_A, *d_B, *d_C;
-    size_t size = N * sizeof(float);
+// void vectorAdd(const float* A, const float* B, float* C, int N)
+// {
+//     float *d_A, *d_B, *d_C;
+//     size_t size = N * sizeof(float);
 
-    // Allocate memory on GPU
-    cudaMalloc(&d_A, size);
-    cudaMalloc(&d_B, size);
-    cudaMalloc(&d_C, size);
+//     // Allocate memory on GPU
+//     cudaMalloc(&d_A, size);
+//     cudaMalloc(&d_B, size);
+//     cudaMalloc(&d_C, size);
 
-    // Copy vectors from host to device
-    cudaMemcpy(d_A, A, size, cudaMemcpyHostToDevice);
-    cudaMemcpy(d_B, B, size, cudaMemcpyHostToDevice);
+//     // Copy vectors from host to device
+//     cudaMemcpy(d_A, A, size, cudaMemcpyHostToDevice);
+//     cudaMemcpy(d_B, B, size, cudaMemcpyHostToDevice);
 
-    // Launch kernel
-    int threadsPerBlock = 32;
-    int blocksPerGrid = (N + threadsPerBlock - 1) / threadsPerBlock;
-    std::cout << "blocksPerGrid = " << blocksPerGrid << std::endl;
+//     // Launch kernel
+//     int threadsPerBlock = 32;
+//     int blocksPerGrid = (N + threadsPerBlock - 1) / threadsPerBlock;
+//     std::cout << "blocksPerGrid = " << blocksPerGrid << std::endl;
 
-     vectorAddKernel<<<blocksPerGrid, threadsPerBlock>>>(d_A, d_B, d_C, N);
+//      vectorAddKernel<<<blocksPerGrid, threadsPerBlock>>>(d_A, d_B, d_C, N);
 
-    // Check for kernel launch errors
-    cudaError_t err = cudaGetLastError();
-    cout << "Error DETECTION before" << endl;
-    if (err != cudaSuccess)
-    {
-        std::cerr << "CUDA kernel launch failed: " << cudaGetErrorString(err)
-                  << std::endl;
-        // exit(EXIT_FAILURE);
-    }
-    cout << "Error DETECTION AFTER" << endl;
+//     // Check for kernel launch errors
+//     cudaError_t err = cudaGetLastError();
+//     cout << "Error DETECTION before" << endl;
+//     if (err != cudaSuccess)
+//     {
+//         std::cerr << "CUDA kernel launch failed: " << cudaGetErrorString(err)
+//                   << std::endl;
+//         // exit(EXIT_FAILURE);
+//     }
+//     cout << "Error DETECTION AFTER" << endl;
 
-    cudaDeviceSynchronize();
-    // Copy result back to host
-    cudaMemcpy(C, d_C, size, cudaMemcpyDeviceToHost);
+//     cudaDeviceSynchronize();
+//     // Copy result back to host
+//     cudaMemcpy(C, d_C, size, cudaMemcpyDeviceToHost);
 
-    for (int i = 0; i < 10; ++i)
-    {
-        std::cout << "C[" << i << "] = " << C[i] << std::endl;
-    }
+//     for (int i = 0; i < 10; ++i)
+//     {
+//         std::cout << "C[" << i << "] = " << C[i] << std::endl;
+//     }
 
-    // Free memory on GPU
-    cudaFree(d_A);
-    cudaFree(d_B);
-    cudaFree(d_C);
-}
+//     // Free memory on GPU
+//     cudaFree(d_A);
+//     cudaFree(d_B);
+//     cudaFree(d_C);
+// }
