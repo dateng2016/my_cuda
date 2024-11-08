@@ -21,7 +21,6 @@ __global__ void updateGridKernel(uint8_t* gridCurrent, uint8_t* gridNext,
         return; // Boundary check
 
     int neighbors = 0;
-
     // Count neighbors of the current cell
     for (int dx = -1; dx <= 1; dx++)
     {
@@ -38,7 +37,6 @@ __global__ void updateGridKernel(uint8_t* gridCurrent, uint8_t* gridNext,
     }
 
     // Conway's Game of Life rules
-
     if (gridCurrent[l])
     {
         gridNext[l] = (neighbors == 2 || neighbors == 3); // Cell remains alive
@@ -63,17 +61,15 @@ void normalMemSimulate(RenderWindow& window, int threadsPerBlock,
         cudaMalloc(&d_gridCurrent, size);
         cudaMalloc(&d_gridNext, size);
     }
-    if (memoryType == "PINNED")
-    {
-        cudaMallocManaged(&d_gridCurrent, size);
-        cudaMallocManaged(&d_gridNext, size);
-    }
-
-    if (memoryType == "MANAGED")
-
+    else if (memoryType == "PINNED")
     {
         cudaMallocHost(&d_gridCurrent, size);
         cudaMallocHost(&d_gridNext, size);
+    }
+    else if (memoryType == "MANAGED")
+    {
+        cudaMallocManaged(&d_gridCurrent, size);
+        cudaMallocManaged(&d_gridNext, size);
     }
 
     // * Flatten the vectors
