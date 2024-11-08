@@ -54,9 +54,7 @@ void normalMemSimulate(RenderWindow& window, int threadsPerBlock,
                        int gridHeight, int cellSize)
 //    TODO: Might NOT neet gridWidth and gridHeight
 {
-    cout << "-----" << endl;
-    cout << gridCurrent.size() << endl << gridCurrent[0].size() << endl;
-    cout << "-----" << endl;
+
     // Initialize grid states on host
     bool *d_gridCurrent, *d_gridNext;
 
@@ -109,11 +107,10 @@ void normalMemSimulate(RenderWindow& window, int threadsPerBlock,
 
         window.clear();
 
+        cout << "-----" << endl;
+        cout << gridCurrent.size() << endl << gridCurrent[0].size() << endl;
+        cout << "-----" << endl;
         // Draw the grid
-        cout << gridWidth << endl
-             << gridHeight << endl
-             << gridCurrent.size() << endl
-             << gridCurrent[0].size() << endl;
         for (int x = 0; x < gridWidth; ++x)
         {
             for (int y = 0; y < gridHeight; ++y)
