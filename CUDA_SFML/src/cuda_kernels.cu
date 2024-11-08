@@ -115,21 +115,17 @@ void normalMemSimulate(RenderWindow& window, int threadsPerBlock,
 
         RectangleShape cell(Vector2f(cellSize, cellSize));
 
+        cout << flatGridCurrent.size() << endl << 160 * 120 << endl;
         for (int y = 0; y < gridHeight; ++y)
         {
             for (int x = 0; x < gridWidth; ++x)
             {
                 if (flatGridCurrent[y * gridWidth + x])
                 {
-                    cout << "1 ";
                     // cell.setPosition(y * cellSize, x * cellSize);
                     cell.setPosition(x * cellSize, y * cellSize);
                     cell.setFillColor(Color::White);
                     window.draw(cell);
-                }
-                else
-                {
-                    cout << "0 ";
                 }
             }
             cout << endl;
