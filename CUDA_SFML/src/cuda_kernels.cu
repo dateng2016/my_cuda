@@ -52,7 +52,7 @@ __global__ void updateGridKernel(uint8_t* gridCurrent, uint8_t* gridNext,
 void normalMemSimulate(RenderWindow& window, int threadsPerBlock,
                        vector<vector<uint8_t>>& gridCurrent,
                        vector<vector<uint8_t>>& gridNext, int gridWidth,
-                       int gridHeight, int cellSize, str memoryType)
+                       int gridHeight, int cellSize, string memoryType)
 {
     uint8_t *d_gridCurrent, *d_gridNext;
     int N = gridWidth * gridHeight;
