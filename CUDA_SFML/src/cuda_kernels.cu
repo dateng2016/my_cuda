@@ -92,14 +92,12 @@ void normalMemSimulate(RenderWindow& window, int threadsPerBlock,
 
         // Check for kernel launch errors
         cudaError_t err = cudaGetLastError();
-        cout << "Error DETECTION before" << endl;
         if (err != cudaSuccess)
         {
             std::cerr << "CUDA kernel launch failed: "
                       << cudaGetErrorString(err) << std::endl;
             exit(EXIT_FAILURE);
         }
-        cout << "Error DETECTION AFTER" << endl;
 
         // Copy the updated grid back to host
         cudaMemcpy(gridCurrent.data(), d_gridNext,
@@ -126,7 +124,7 @@ void normalMemSimulate(RenderWindow& window, int threadsPerBlock,
         window.display();
 
         // Swap grids for the next generation
-        swap(gridCurrent, gridNext);
+        gridCurrent = gridNext;
 
         // Check for performance every 100 generations
         if (generationCount % 100 == 0)
