@@ -45,6 +45,38 @@ void parseArguments(int argc, char* argv[], int& threadsPerBlock, int& cellSize,
                     int& windowWidth, int& windowHeight,
                     std::string& memoryType)
 {
+    /**
+     * @brief Parses command-line arguments and sets simulation configuration.
+     *
+     * This function processes command-line arguments passed to the program and
+     * uses them to configure simulation parameters such as the number of
+     * threads per block, cell size, window dimensions, and memory allocation
+     * type. The function verifies that the arguments are valid and ensures that
+     * certain parameters meet specific constraints (e.g., number of threads
+     * must be a multiple of 32).
+     *
+     * @param argc The number of command-line arguments passed to the program.
+     * @param argv The array of command-line argument strings.
+     * @param threadsPerBlock An integer reference that will be set to the
+     * number of threads per block.
+     * @param cellSize An integer reference that will be set to the size of each
+     * cell in the simulation.
+     * @param windowWidth An integer reference that will be set to the width of
+     * the simulation window.
+     * @param windowHeight An integer reference that will be set to the height
+     * of the simulation window.
+     * @param memoryType A string reference that will be set to the memory type
+     * (e.g., "NORMAL", "PINNED", "MANAGED").
+     *
+     * @return void This function does not return any value. It modifies the
+     * input parameters by reference.
+     *
+     * @throws std::invalid_argument If an invalid memory type is provided
+     * (other than "NORMAL", "PINNED", or "MANAGED").
+     * @throws std::logic_error If any argument fails the assertion checks
+     * (e.g., threadsPerBlock is not a multiple of 32).
+     */
+
     // Parse command-line arguments
     for (int i = 1; i < argc; i++)
     {
@@ -101,6 +133,28 @@ void parseArguments(int argc, char* argv[], int& threadsPerBlock, int& cellSize,
 void displayConfiguration(int threadsPerBlock, int cellSize, int windowWidth,
                           int windowHeight, const std::string& memoryType)
 {
+    /**
+     * @brief Displays the current configuration of the simulation.
+     *
+     * This function prints out the configuration settings for the Game of Life
+     * simulation, including the number of threads per block, the size of each
+     * cell, the window dimensions, and the type of memory used for GPU
+     * computations. It also calculates and displays the grid size based on the
+     * window dimensions and cell size.
+     *
+     * @param threadsPerBlock The number of threads to be used per block in the
+     * CUDA kernel.
+     * @param cellSize The size of each individual cell, in pixels, used for
+     * rendering.
+     * @param windowWidth The width of the window in pixels.
+     * @param windowHeight The height of the window in pixels.
+     * @param memoryType A string representing the type of memory allocation
+     * used (e.g., "Normal", "Pinned", "Managed").
+     *
+     * @return void This function does not return any value. It only prints the
+     * configuration information to the console.
+     */
+
     std::cout << "Configuration:\n";
     std::cout << "  Number of threads per block: " << threadsPerBlock
               << std::endl;

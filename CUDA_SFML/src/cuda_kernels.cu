@@ -23,6 +23,33 @@ using namespace sf;
 __global__ void updateGridKernel(uint8_t* gridCurrent, uint8_t* gridNext,
                                  int gridWidth, int gridHeight)
 {
+    /**
+     * @brief CUDA kernel to update the grid state in Conway's Game of Life.
+     *
+     * This kernel computes the next state of each cell in the grid based on the
+     * current state and the number of live neighbors around it. The computation
+     * follows the rules of Conway's Game of Life, where:
+     * - A live cell with 2 or 3 live neighbors remains alive.
+     * - A dead cell with exactly 3 live neighbors becomes alive.
+     * - All other cells die or stay dead.
+     *
+     * The kernel operates on a 1D grid representation (flattened from 2D) and
+     * updates the state in the corresponding position in the next grid
+     * (gridNext).
+     *
+     * @param gridCurrent Pointer to the current grid state, a 1D array
+     * representing the grid of cells. Each element is either 0 (dead) or 1
+     * (alive).
+     * @param gridNext Pointer to the next grid state, where the updated values
+     * will be written. It is the same size as gridCurrent.
+     * @param gridWidth The width of the grid (number of columns).
+     * @param gridHeight The height of the grid (number of rows).
+     *
+     * @return void This kernel does not return any value directly. It modifies
+     * the `gridNext` array in place.
+
+     */
+
     // ! This is 1D, so we need to unpack it back to (x, y) coordinates
     int l = blockIdx.x * blockDim.x + threadIdx.x; // x index of cell
     int y = l / gridWidth;
@@ -63,6 +90,37 @@ void normalMemSimulate(RenderWindow& window, int threadsPerBlock,
                        vector<vector<uint8_t>>& gridNext, int gridWidth,
                        int gridHeight, int cellSize, string memoryType)
 {
+    /**
+     * @brief Simulates Conway's Game of Life using normal CUDA memory
+     * allocation.
+     *
+     * This function simulates the evolution of Conway's Game of Life by
+     * repeatedly updating the grid based on the current state of the cells and
+     * their neighbors. The simulation runs in parallel on the GPU using CUDA,
+     * and the grid is stored in device memory allocated with `cudaMalloc`. The
+     * grid is rendered in a window using the SFML library, with each generation
+     * being displayed on the screen.
+     *
+     * The function measures the processing time for every 100 generations and
+     * prints the time taken to the console, excluding the time spent rendering
+     * the grid.
+     *
+     * @param window A reference to an SFML `RenderWindow` object used for
+     * rendering the grid to the screen.
+     * @param threadsPerBlock The number of threads to use per CUDA block for
+     * kernel execution.
+     * @param gridCurrent A 2D vector of `uint8_t` representing the current
+     * state of the grid, where each element is either 0 (dead) or 1 (alive).
+     * @param gridNext A 2D vector of `uint8_t` where the updated state of the
+     * grid will be stored.
+     * @param gridWidth The width (number of columns) of the grid.
+     * @param gridHeight The height (number of rows) of the grid.
+     * @param cellSize The size (width and height) of each individual cell when
+     * rendering.
+     * @param memoryType A string representing the memory allocation type used
+     * (e.g., "Normal").
+     */
+
     uint8_t *d_gridCurrent, *d_gridNext;
     int N = gridWidth * gridHeight;
     size_t size = N * sizeof(uint8_t);
@@ -192,6 +250,41 @@ void pinnedMemSimulate(RenderWindow& window, int threadsPerBlock,
                        vector<vector<uint8_t>>& gridNext, int gridWidth,
                        int gridHeight, int cellSize, string memoryType)
 {
+    /**
+     * @brief Simulates Conway's Game of Life using pinned memory (page-locked
+     * memory) on the GPU.
+     *
+     * This function simulates the evolution of Conway's Game of Life by
+     * updating the grid based on the current state of the cells and their
+     * neighbors. The simulation is run in parallel using a CUDA kernel on the
+     * GPU, and the grid is allocated in pinned (page-locked) memory on the
+     * host. This allows faster memory transfers between the host and the GPU.
+     * The grid is rendered in a window using the SFML library.
+     *
+     * The function measures the processing time for every 100 generations and
+     * prints the time taken to the console, excluding the time spent rendering
+     * the grid.
+     *
+     * @param window A reference to an SFML `RenderWindow` object used for
+     * rendering the grid to the screen.
+     * @param threadsPerBlock The number of threads to use per CUDA block for
+     * kernel execution.
+     * @param gridCurrent A 2D vector of `uint8_t` representing the current
+     * state of the grid, where each element is either 0 (dead) or 1 (alive).
+     * @param gridNext A 2D vector of `uint8_t` where the updated state of the
+     * grid will be stored.
+     * @param gridWidth The width (number of columns) of the grid.
+     * @param gridHeight The height (number of rows) of the grid.
+     * @param cellSize The size (width and height) of each individual cell when
+     * rendering.
+     * @param memoryType A string representing the memory allocation type used
+     * (e.g., "Pinned").
+     *
+     * @return void This function does not return a value. It directly modifies
+     * the grid state in pinned memory on the host, performs rendering in the
+     * window, and measures processing times for every 100 generations.
+     */
+
     uint8_t *d_gridCurrent, *d_gridNext;
     int N = gridWidth * gridHeight;
     size_t size = N * sizeof(uint8_t);
@@ -319,6 +412,41 @@ void managedMemSimulate(RenderWindow& window, int threadsPerBlock,
                         vector<vector<uint8_t>>& gridNext, int gridWidth,
                         int gridHeight, int cellSize, string memoryType)
 {
+    /**
+     * @brief Simulates Conway's Game of Life using managed memory on the GPU.
+     *
+     * This function runs a simulation of Conway's Game of Life on the GPU,
+     * updating the grid of cells according to the game's rules. The grid is
+     * allocated in managed memory, which is a special type of memory that is
+     * accessible by both the CPU and the GPU. This allows for automatic
+     * synchronization between the host and device memory, simplifying memory
+     * management. The grid state is updated in parallel on the GPU using CUDA,
+     * and the simulation is rendered using the SFML library in a window.
+     *
+     * The function also measures the time taken to compute 100 generations and
+     * prints the processing time in microseconds to the console, excluding the
+     * rendering time.
+     *
+     * @param window A reference to an SFML `RenderWindow` object used for
+     * rendering the grid on the screen.
+     * @param threadsPerBlock The number of threads to use per CUDA block for
+     * kernel execution.
+     * @param gridCurrent A 2D vector of `uint8_t` representing the current
+     * state of the grid, where each element is either 0 (dead) or 1 (alive).
+     * @param gridNext A 2D vector of `uint8_t` where the updated state of the
+     * grid will be stored.
+     * @param gridWidth The width (number of columns) of the grid.
+     * @param gridHeight The height (number of rows) of the grid.
+     * @param cellSize The size (width and height) of each individual cell when
+     * rendering.
+     * @param memoryType A string representing the memory allocation type used
+     * (e.g., "Managed").
+     *
+     * @return void This function does not return a value. It directly modifies
+     * the grid state in managed memory, renders the grid in the SFML window,
+     * and measures processing times for every 100 generations.
+     */
+
     uint8_t *d_gridCurrent, *d_gridNext;
     int N = gridWidth * gridHeight;
     size_t size = N * sizeof(uint8_t);
