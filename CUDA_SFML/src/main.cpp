@@ -1,4 +1,10 @@
-// main.cpp
+/*
+Author: Da Teng
+Class: ECE6122
+Last Date Modified: date 11/8/2024
+Description:
+This is the main file for Lab 4
+*/// main.cpp
 #include "cuda_kernels.cuh"
 #include "utils.h"
 #include <SFML/Graphics.hpp>
@@ -51,7 +57,6 @@ int main(int argc, char* argv[])
     }
     else if (memoryType == "PINNED")
     {
-        cout << "hello" << endl;
         pinnedMemSimulate(window, threadsPerBlock, gridCurrent, gridNext,
                           gridWidth, gridHeight, cellSize, memoryType);
     }

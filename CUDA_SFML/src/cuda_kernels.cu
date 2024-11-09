@@ -1,3 +1,12 @@
+/*
+Author: Da Teng
+Class: ECE6122
+Last Date Modified: date 11/8/2024
+Description:
+This file gives the kernel function needed to compute for the game of life video
+game
+*/
+
 // cuda_kernels.cu
 #include "cuda_kernels.cuh"
 #include "utils.h"

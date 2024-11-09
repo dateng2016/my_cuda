@@ -1,3 +1,10 @@
+/*
+Author: Da Teng
+Class: ECE6122
+Last Date Modified: date 11/8/2024
+Description:
+This file is used for storing some utility function needed for the lab
+*/
 #include <iostream>
 #include <vector>
 using namespace std;

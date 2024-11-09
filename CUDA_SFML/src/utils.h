@@ -1,3 +1,10 @@
+/*
+Author: Da Teng
+Class: ECE6122
+Last Date Modified: date 11/8/2024
+Description:
+This is header file for the utility function
+*/
 #pragma once
 #include <iostream>
 #include <vector>
